@@ -1,2 +1,0 @@
-class RepositoryException(BaseException):
-    pass
