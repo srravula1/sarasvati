@@ -1,0 +1,9 @@
+# plugins configoration section
+plugins:
+  # path to plugins folder
+  path: plugins
+  
+  # list of repositories to get
+  # plugins information from
+  repositories:
+    - https://pastebin.com/raw/cffiHTLa
