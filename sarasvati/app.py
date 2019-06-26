@@ -16,7 +16,7 @@ def run():
         urls=repositories_url)
     
     r.update()
-    r.install("dummy")
+    r.install("hello-world")
 
 if __name__ == "__main__":
     run()

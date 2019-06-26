@@ -1,15 +1,14 @@
 from typing import List
 
 from requests import get as requests_get
+from yaml.scanner import ScannerError
 from yaml import safe_load as yaml_load
 
 from .fetcher import PluginFetcher
 from .meta import PluginMeta
+from .exception import PluginsException
 
 PluginID = str
-
-class PluginExcpetion(BaseException):
-    pass
 
 class PluginsRepository:
     def __init__(self, path, urls: List[str]):
@@ -41,4 +40,7 @@ class PluginsRepository:
         response = requests_get(url)
         if not response.ok:
             raise Exception(f"Unable to fetch repository: {response.status_code} {response.reason}")
-        return yaml_load(response.text)
+        try:
+            return yaml_load(response.text)
+        except ScannerError as ex:
+            raise PluginsException("Repository file is broken. Not a valid YAML file.")
