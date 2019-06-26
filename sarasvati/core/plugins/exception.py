@@ -1,2 +1,0 @@
-class PluginsException(BaseException):
-    pass

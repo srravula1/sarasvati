@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "sarasvati"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = ["Advaita Krishna das <advaita.krishna.das@gmail.com>"]
 
@@ -8,6 +8,8 @@ authors = ["Advaita Krishna das <advaita.krishna.das@gmail.com>"]
 python = "^3.7"
 pyyaml = "^5.1"
 requests = "^2.22"
+yapsy = "^1.12"
+download-and-extract = "^0.3.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"

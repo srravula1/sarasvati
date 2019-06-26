@@ -4,35 +4,36 @@ from requests import get as requests_get
 from yaml.scanner import ScannerError
 from yaml import safe_load as yaml_load
 
-from .fetcher import PluginFetcher
-from .meta import PluginMeta
-from .exception import PluginsException
+from .fetcher import PackageFetcher
+from .meta import PackageInfo
+from .exception import PackagesException
 
-PluginID = str
+PackageId = str
 
-class PluginsRepository:
+class PackagesRepository:
     def __init__(self, path, urls: List[str]):
+        self.__path = path
         self.__urls = urls
         self.__cache = {}
-        self.__fetcher = PluginFetcher(path)
+        self.__fetcher = PackageFetcher()
 
     def update(self):
         for url in self.__urls:
             data = self.__fetch_repository(url)
             self.__cache.update(data)
-        self.__cache = {k: PluginMeta(k, v["name"], v["url"]) for k, v in self.__cache.items()}
+        self.__cache = {k: PackageInfo(k, v["name"], v["url"]) for k, v in self.__cache.items()}
         print(self.__cache)
         
-    def install(self, pid: PluginID):
-        # get plugin info
-        plugin_data = self.__cache.get(pid)
-        if not plugin_data:
-            raise Exception(f"Unable to install plugin {pid}")
+    def install(self, pid: PackageId):
+        # get package info
+        package_info = self.__cache.get(pid)
+        if not package_info:
+            raise Exception(f"Unable to install package {pid}")
 
         # download file
-        self.__fetcher.fetch(plugin_data)
+        self.__fetcher.fetch(package_info, self.__path)
 
-    def uninstall(self, pid: PluginID):
+    def uninstall(self, pid: PackageId):
         pass
 
     @staticmethod
@@ -43,4 +44,4 @@ class PluginsRepository:
         try:
             return yaml_load(response.text)
         except ScannerError as ex:
-            raise PluginsException("Repository file is broken. Not a valid YAML file.")
+            raise PackagesException("Repository file is broken. Not a valid YAML file.")

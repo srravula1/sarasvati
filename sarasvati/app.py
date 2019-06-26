@@ -1,5 +1,5 @@
 from yaml import safe_load as yaml_load
-from sarasvati.core.plugins import PluginsRepository
+from sarasvati.core.packages import PackagesRepository
 
 def run():
     print("Run sarasvati")
@@ -8,11 +8,11 @@ def run():
     with open("config.yml", "r") as ymlfile:
         cfg = yaml_load(ymlfile)
 
-    # init plugins repository
-    plugins_path = cfg["plugins"]["path"]
+    # init packages repository
+    packages_path = cfg["plugins"]["path"]
     repositories_url = cfg["plugins"]["repositories"]
-    r = PluginsRepository(
-        path=plugins_path,
+    r = PackagesRepository(
+        path=packages_path,
         urls=repositories_url)
     
     r.update()

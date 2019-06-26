@@ -1,4 +1,4 @@
-class PluginMeta:
+class PackageInfo:
     def __init__(self, key: str, name: str, url: str):
         self.__key = key
         self.__name = name
