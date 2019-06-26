@@ -9,8 +9,8 @@ def run():
         cfg = yaml_load(ymlfile)
 
     # init packages repository
-    packages_path = cfg["plugins"]["path"]
-    repositories_url = cfg["plugins"]["repositories"]
+    packages_path = cfg["packages"]["path"]
+    repositories_url = cfg["packages"]["repositories"]
     r = PackagesRepository(
         path=packages_path,
         urls=repositories_url)

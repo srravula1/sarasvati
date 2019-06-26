@@ -1,7 +1,7 @@
-# plugins configoration section
-plugins:
+# packages configuration section
+packages:
   # path to plugins folder
-  path: plugins
+  path: packages
   
   # list of repositories to get
   # plugins information from

@@ -7,5 +7,5 @@ __pycache__
 .pytest_cache
 
 # sarasvati
-/plugins
-/plugins-dev
+/packages
+/packages-dev
