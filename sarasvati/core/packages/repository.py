@@ -6,7 +6,7 @@ from yaml import safe_load as yaml_load
 
 from .fetcher import PackageFetcher
 from .meta import PackageInfo
-from .exception import PackagesException
+from .exception import RepositoryException
 
 PackageId = str
 
@@ -24,24 +24,24 @@ class PackagesRepository:
         self.__cache = {k: PackageInfo(k, v["name"], v["url"]) for k, v in self.__cache.items()}
         print(self.__cache)
         
-    def install(self, pid: PackageId):
+    def fetch(self, pid: PackageId):
         # get package info
         package_info = self.__cache.get(pid)
         if not package_info:
-            raise Exception(f"Unable to install package {pid}")
+            raise RepositoryException(f"Unable to fetch package {pid}")
 
         # download file
         self.__fetcher.fetch(package_info, self.__path)
 
-    def uninstall(self, pid: PackageId):
+    def remove(self, pid: PackageId):
         pass
 
     @staticmethod
     def __fetch_repository(url: str) -> dict:
         response = requests_get(url)
         if not response.ok:
-            raise Exception(f"Unable to fetch repository: {response.status_code} {response.reason}")
+            raise RepositoryException(f"Unable to fetch repository: {response.status_code} {response.reason}")
         try:
             return yaml_load(response.text)
         except ScannerError as ex:
-            raise PackagesException("Repository file is broken. Not a valid YAML file.")
+            raise RepositoryException("Repository file is broken. Not a valid YAML file.")

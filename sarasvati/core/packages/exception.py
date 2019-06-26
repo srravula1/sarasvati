@@ -1,2 +1,2 @@
-class PackagesException(BaseException):
+class RepositoryException(BaseException):
     pass

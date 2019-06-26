@@ -2,7 +2,7 @@ from os.path import join
 
 from download_and_extract import Fetcher, FetcherException
 
-from .exception import PackagesException
+from .exception import RepositoryException
 from .meta import PackageInfo
 
 
@@ -22,10 +22,10 @@ class PackageFetcher():
             to {str} -- Path to extrack package.
         
         Raises:
-            PackagesException: Error.
+            RepositoryException: Error.
         """
         try:
             self.__fetcher.fetch(meta.url, join(to, meta.key))
         except FetcherException as ex:
             msg = ex.args[0]
-            raise PackagesException(f"Unable to fetch package. {msg}.")
+            raise RepositoryException(msg)
