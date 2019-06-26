@@ -1,5 +1,5 @@
 from yaml import safe_load as yaml_load
-from sarasvati.core.packages import PackagesRepository
+from sarasvati.core.repository import PackagesRepository
 
 def run():
     print("Run sarasvati")

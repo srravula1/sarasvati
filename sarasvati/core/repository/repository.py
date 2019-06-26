@@ -1,12 +1,12 @@
 from typing import List
 
 from requests import get as requests_get
-from yaml.scanner import ScannerError
 from yaml import safe_load as yaml_load
+from yaml.scanner import ScannerError
 
+from .exception import RepositoryException
 from .fetcher import PackageFetcher
 from .meta import PackageInfo
-from .exception import RepositoryException
 
 PackageId = str
 
