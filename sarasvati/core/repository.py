@@ -1,6 +1,8 @@
+from collections import namedtuple
+from logging import getLogger
 from os.path import join
 from typing import List
-from collections import namedtuple
+
 from download_and_extract import Fetcher, FetcherException
 from requests import get as requests_get
 from yaml import safe_load as yaml_load
@@ -15,15 +17,18 @@ class PackagesRepository:
         self.__urls = urls
         self.__cache = {}
         self.__fetcher = PackageFetcher()
+        self.__log = getLogger("repository")
 
     def update(self):
         # fetch all the repositories and merge it into one cache
         for url in self.__urls:
+            self.__log.info("Fetching repository %s", url)
             data = self.__fetch_repository(url)
             self.__cache.update(data)
         
         # convert dict to named tuples
         # note: keys order is important
+        self.__log.info("Packages in repository: %d", len(self.__cache.keys()))
         self.__cache = {
             k: PackageInfo(k, v["name"], v["url"], v["author"]) 
             for k, v in self.__cache.items()
@@ -33,9 +38,10 @@ class PackagesRepository:
         # get package info
         package_info = self.__cache.get(pid)
         if not package_info:
-            raise RepositoryException(f"Unable to fetch package {pid}")
+            raise RepositoryException(f"Package {pid} doesn't exist")
 
         # download file
+        self.__log.info("Fetching package %s", package_info.key)
         self.__fetcher.fetch(package_info, self.__path)
 
     def remove(self, pid: PackageId):

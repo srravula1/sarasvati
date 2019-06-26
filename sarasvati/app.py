@@ -1,5 +1,9 @@
 from yaml import safe_load as yaml_load
 from sarasvati.core.repository import PackagesRepository
+from logging import getLogger, basicConfig, DEBUG, CRITICAL
+
+basicConfig(level=DEBUG)
+getLogger("urllib3.connectionpool").setLevel(CRITICAL)
 
 def run():
     print("Run sarasvati")
