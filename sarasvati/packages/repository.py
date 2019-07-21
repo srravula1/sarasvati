@@ -28,6 +28,9 @@ class Repository:
             for k, v in self.__packages.items()
         }
 
+    def find_package(self, packageId: PackageId):
+        return self.__packages.get(packageId, None)
+
     def get_package(self, packageId: PackageId):
         if packageId not in self.__packages:
             raise PackagesException(f"No package {packageId} found")
