@@ -1,6 +1,8 @@
+from logging import CRITICAL, DEBUG, basicConfig, getLogger
+
 from yaml import safe_load as yaml_load
-from sarasvati.core.repository import PackagesRepository
-from logging import getLogger, basicConfig, DEBUG, CRITICAL
+
+from sarasvati.packages import PackageFetcher, PackagesException, Repository
 
 basicConfig(level=DEBUG)
 getLogger("urllib3.connectionpool").setLevel(CRITICAL)
@@ -15,12 +17,13 @@ def run():
     # init packages repository
     packages_path = cfg["packages"]["path"]
     repositories_url = cfg["packages"]["repositories"]
-    r = PackagesRepository(
-        path=packages_path,
-        urls=repositories_url)
-    
+    r = Repository(repositories_url[0])
     r.update()
-    r.fetch("hello-world")
+    package = r.get_package("hello-world")
+
+    f = PackageFetcher(packages_path)
+    f.fetch(package)
+    # r.fetch("hello-world")
 
 if __name__ == "__main__":
     run()
