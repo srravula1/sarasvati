@@ -11,7 +11,7 @@ from sarasvati.packages.package import Package
 class PackageFetcher:
     def __init__(self, fetch_to: str):
         self.__fetch_to = fetch_to
-        self.__log = getLogger("repository")
+        self.__log = getLogger("packages")
 
     def fetch(self, package: Package):
         try:
