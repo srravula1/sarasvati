@@ -1,11 +1,12 @@
 from logging import CRITICAL, DEBUG, basicConfig, getLogger
 
 from yaml import safe_load as yaml_load
+from .api.api import Sarasvati
 
-from sarasvati.packages import PackagesManager
 
 basicConfig(level=DEBUG)
 getLogger("urllib3.connectionpool").setLevel(CRITICAL)
+getLogger("yapsy").setLevel(CRITICAL)
 
 def run():
     print("Run sarasvati")
@@ -18,10 +19,19 @@ def run():
     packages_path = cfg["packages"]["path"]
     repositories_url = cfg["packages"]["repositories"]
 
+    api = Sarasvati()
+    app = api.plugins.get(category="Application")
 
-    m = PackagesManager(repositories_url, packages_path)
-    m.update()
-    m.add("hello-world")
+    for c in api.plugins.find(category="Commands"):
+        print(c)
+        c.activate()
+
+    app.activate()
+
+
+    # m = PackagesManager(repositories_url, packages_path)
+    # m.update()
+    # m.add("hello-world")
 
 if __name__ == "__main__":
     run()
