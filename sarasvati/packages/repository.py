@@ -11,6 +11,10 @@ class Repository:
         self.__parser = parser()
         self.__packages = {}
 
+    @property
+    def packages(self):
+        return list(self.__packages.values())
+
     def update(self):
         metadata = self.__loader.load()
         packages = self.__parser.parse(metadata)

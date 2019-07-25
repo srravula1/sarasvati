@@ -1,4 +1,5 @@
 from typing import List
+from itertools import chain
 
 from sarasvati.packages import PackageId, PackagesException
 from sarasvati.packages.fetcher import PackageFetcher
@@ -10,6 +11,14 @@ class PackagesManager:
     def __init__(self, urls: List[str], path: str):
         self.__repositories = self.__create_repos_from_urls(urls)
         self.__fetcher = PackageFetcher(path)
+
+    @property
+    def packages(self):
+        return list(chain.from_iterable(map(lambda r: r.packages, self.__repositories)))
+
+    @property
+    def repositories(self):
+        return self.__repositories
 
     def update(self):
         for repository in self.__repositories:
