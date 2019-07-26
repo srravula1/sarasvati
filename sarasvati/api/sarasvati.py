@@ -1,9 +1,10 @@
+from sarasvati.brain.brain import BrainManager
 from sarasvati.brain.components import ComponentsManager
 from sarasvati.config import ConfigManager
 from sarasvati.packages import PackagesManager
 from sarasvati.plugins import (ApplicationPlugin, CommandLinePlugin,
                                CommandsPlugin, ComponentsPlugin,
-                               PluginsManager)
+                               PluginsManager, StoragePlugin)
 
 
 class Sarasvati:
@@ -24,10 +25,14 @@ class Sarasvati:
                 "Application": ApplicationPlugin,
                 "CommandLine": CommandLinePlugin,
                 "Commands": CommandsPlugin,
-                "Components": ComponentsPlugin
+                "Components": ComponentsPlugin,
+                "Storage": StoragePlugin
             })
 
         # Components
         self.components = ComponentsManager(
             api=self
         )
+
+        # Brain manager
+        self.brain = BrainManager(api=self)

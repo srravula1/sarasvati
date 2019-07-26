@@ -115,3 +115,35 @@ class Thought(Composite):
 
     def __repr__(self):
         return "<{}>".format(self.definition.title)
+
+
+class Brain:
+    def __init__(self, storage):
+        self.__storage = storage
+    
+    def create_thought(self):
+        self.__storage.add({"test": 123})
+
+    def delete_thought(self):
+        pass
+
+    def find_thoughts(self):
+        pass
+
+    def activate_thought(self):
+        pass
+
+
+class BrainManager:
+    def __init__(self, api):
+        self.__api = api
+        self.__active = None
+
+    def open(self, path):
+        storage = self.__api.plugins.get(category="Storage").open(path)
+        self.__active = Brain(storage)
+        return self.__active
+
+    @property
+    def active(self):
+        return self.__active

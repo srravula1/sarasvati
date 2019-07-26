@@ -11,6 +11,7 @@ requests = "^2.22"
 yapsy = "^1.12"
 ansimarkup = "^1.4"
 munch = "^2.3"
+tinydb = "^3.13"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"

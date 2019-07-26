@@ -43,3 +43,11 @@ class CommandsPlugin(Plugin):
 class ComponentsPlugin(Plugin):
     def __init__(self):
         super().__init__()
+
+
+class StoragePlugin(Plugin):
+    def __init__(self):
+        super().__init__()
+
+    def open(self):
+        pass
