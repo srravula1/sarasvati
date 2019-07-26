@@ -1,7 +1,9 @@
+from sarasvati.brain.components import ComponentsManager
 from sarasvati.config import ConfigManager
 from sarasvati.packages import PackagesManager
 from sarasvati.plugins import (ApplicationPlugin, CommandLinePlugin,
-                               CommandsPlugin, PluginsManager)
+                               CommandsPlugin, ComponentsPlugin,
+                               PluginsManager)
 
 
 class Sarasvati:
@@ -21,5 +23,11 @@ class Sarasvati:
             categories={
                 "Application": ApplicationPlugin,
                 "CommandLine": CommandLinePlugin,
-                "Commands": CommandsPlugin
+                "Commands": CommandsPlugin,
+                "Components": ComponentsPlugin
             })
+
+        # Components
+        self.components = ComponentsManager(
+            api=self
+        )

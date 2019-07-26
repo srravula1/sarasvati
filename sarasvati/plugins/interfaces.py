@@ -38,3 +38,8 @@ class CommandLinePlugin(Plugin):
 class CommandsPlugin(Plugin):
     def __init__(self):
         super().__init__()
+
+
+class ComponentsPlugin(Plugin):
+    def __init__(self):
+        super().__init__()
