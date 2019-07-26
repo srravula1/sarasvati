@@ -4,9 +4,6 @@ from yapsy.IPlugin import IPlugin as YapsyPlugin
 
 class Plugin(YapsyPlugin):
     def __init__(self):
-        """
-        Initialize new instance of the Plugin class.
-        """
         super().__init__()
 
     def activate(self):

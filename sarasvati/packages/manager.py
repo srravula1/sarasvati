@@ -1,10 +1,11 @@
-from typing import List
 from itertools import chain
+from typing import List
 
-from sarasvati.packages import PackageId, PackagesException
-from sarasvati.packages.fetcher import PackageFetcher
-from sarasvati.packages.metadata import HttpMetadataLoader, YamlMetadataParser
-from sarasvati.packages.repository import Repository
+from .exceptions import PackagesException
+from .fetcher import PackageFetcher
+from .metadata import HttpMetadataLoader, YamlMetadataParser
+from .package import PackageId
+from .repository import Repository
 
 
 class PackagesManager:

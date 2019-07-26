@@ -1,3 +1,3 @@
-from .exceptions import PackagesException
-from .package import PackageId, Package
-from .manager import PackagesManager
+from sarasvati.packages.exceptions import PackagesException
+from sarasvati.packages.package import Package, PackageId
+from sarasvati.packages.manager import PackagesManager

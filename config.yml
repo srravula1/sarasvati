@@ -1,10 +1,5 @@
-# packages configuration section
 packages:
-  # path to plugins folder
   path: packages
-  
-  # list of repositories to get
-  # plugins information from
   repositories:
-    - https://pastebin.com/raw/qqCwanS7
-    - https://pastebin.com/raw/MiX4hmHy
+  - https://pastebin.com/raw/qqCwanS7
+  - https://pastebin.com/raw/MiX4hmHy

@@ -1,3 +1,3 @@
-from .metadata import IMetadataLoader, IMetadataParser
-from .http_loader import HttpMetadataLoader
-from .yaml_parser import YamlMetadataParser
+from sarasvati.packages.metadata.metadata import IMetadataLoader, IMetadataParser
+from sarasvati.packages.metadata.http_loader import HttpMetadataLoader
+from sarasvati.packages.metadata.yaml_parser import YamlMetadataParser

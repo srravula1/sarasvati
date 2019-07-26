@@ -1,2 +1,3 @@
-from .manager import PluginsManager
-from .interfaces import ApplicationPlugin, CommandLinePlugin, CommandsPlugin
+from sarasvati.plugins.interfaces import (ApplicationPlugin, CommandLinePlugin,
+                                          CommandsPlugin)
+from sarasvati.plugins.manager import PluginsManager

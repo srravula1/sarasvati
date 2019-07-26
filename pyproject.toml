@@ -9,6 +9,8 @@ python = "^3.7"
 pyyaml = "^5.1"
 requests = "^2.22"
 yapsy = "^1.12"
+ansimarkup = "^1.4"
+munch = "^2.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"

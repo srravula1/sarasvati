@@ -3,9 +3,9 @@ from typing import List
 from yaml import safe_load as yaml_load
 from yaml.scanner import ScannerError
 
-from sarasvati.packages import Package, PackagesException
-
-from .metadata import IMetadataParser
+from sarasvati.packages import Package
+from sarasvati.packages.exceptions import PackagesException
+from sarasvati.packages.metadata.metadata import IMetadataParser
 
 
 class YamlMetadataParser(IMetadataParser):

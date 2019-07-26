@@ -3,9 +3,8 @@ from typing import List
 
 from requests import get as requests_get
 
-from sarasvati.packages import Package, PackagesException
-
-from .metadata import IMetadataLoader
+from sarasvati.packages import PackagesException
+from sarasvati.packages.metadata.metadata import IMetadataLoader
 
 
 class HttpMetadataLoader(IMetadataLoader):
