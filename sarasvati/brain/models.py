@@ -71,10 +71,10 @@ class Composite(metaclass=ABCMeta):
 
 
 class Thought(Composite):
-    def __init__(self, brain, components=[]):
+    def __init__(self, components_manager, components=[]):
         super().__init__(components=components)
-        self.__brain = brain
-
+        self.__components_manager = components_manager
+        
     @property
     def key(self):
         return self.identity.key
@@ -99,17 +99,17 @@ class Thought(Composite):
         """Sets description of thought."""
         self.definition.description = value
 
-    def save(self):
-        self.__brain.storage.update(self)
+    # def save(self):
+    #     self.__brain.save_thought(self)
 
-    def delete(self):
-        self.__brain.storage.delete(self)
+    # def delete(self):
+    #     self.__brain.delete_thought(self)
 
     def __getattr__(self, component_name):
         if self.has_component(component_name):
             return self.get_component(component_name)
         else:
-            component_instance = self.__brain.components.create_component(component_name)
+            component_instance = self.__components_manager.create_component(component_name)
             self.add_component(component_instance)
             return component_instance
 

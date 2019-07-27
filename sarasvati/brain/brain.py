@@ -1,59 +1,36 @@
-from sarasvati.storage.serialization import Serializer
 from sarasvati.brain.cache import BrainStorageCache
-from sarasvati.brain.models import Thought
+from sarasvati.storage.serialization import Serializer
 
 
 class Brain:
-    def __init__(self, components, storage):
+    def __init__(self, storage):
         self.__storage = storage
-        self.__components = components
-        self.__serializer = Serializer(self.__components)
-        self.__cache = BrainStorageCache(self, self.__storage, self.__serializer)
-    
-    @property
-    def components(self):
-        return self.__components
 
-    @property
-    def storage(self):
-        return self.__storage
+    def save_thought(self, thought):
+        self.__storage.update(thought)
 
     def create_thought(self, title: str, description: str = None, key: str = None):
-        # identity component is required, check it's presence first
-        if not self.__components.is_registered("identity"):
-            raise Exception("Unable to create thought: 'identity' component is not registered.")
-
-        # create thought, and add identity component to be sure key
-        # is generated
-        identity = self.__components.create_component("identity")
-        thought = Thought(self, components=[identity])
-
+        thought = self.__storage.create()
+        
         # set key if provided
         if key:
            thought.identity.key = key
 
         # set definition in provided
         if title or description:
-           thought.definition.title = title
-           thought.definition.description = description
+            thought.definition.title = title
+            thought.definition.description = description
 
-        # link thought
-        #if link:
-        #    link_to = link[0]
-        #    link_type = link[1]
-        #    opposite = {"child": "parent", "parent": "child", "reference": "reference"}.get(link_type)
-        #    thought.links.add(link_to, opposite)
-        #    link_to.links.add(thought, link_type)
-
-        # return result
-        self.__storage.add(self.__serializer.serialize(thought))
+        # save and return
+        # thought.save()
+        self.__storage.add(thought)
         return thought
 
-    def delete_thought(self):
-        pass
+    def delete_thought(self, thought):
+        self.__storage.delete(thought)
 
     def find_thoughts(self, query):
-        return self.__cache.find(query)
+        return self.__storage.find(query)
 
     def activate_thought(self):
         pass
@@ -66,7 +43,10 @@ class BrainManager:
 
     def open(self, path):
         storage = self.__api.plugins.get(category="Storage").open(path)
-        self.__active = Brain(self.__api.components, storage)
+        serializer = Serializer(self.__api.components)
+        cache = BrainStorageCache(self.__api.components, storage, serializer)
+
+        self.__active = Brain(cache)
         return self.__active
 
     @property

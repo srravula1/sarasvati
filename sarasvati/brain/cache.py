@@ -7,18 +7,23 @@ class BrainStorageCache:
     Storage manager.
     """
 
-    def __init__(self, brain, storage, serializer):
-        self.__brain = brain
+    def __init__(self, components_manager, storage, serializer):
+        self.__components_manager = components_manager
         self.__storage = storage
         self.__cache = Cache()
         self.__serializer = serializer
 
-    @property
-    def current(self):
-        return self.__storage
+    def create(self):
+        if not self.__components_manager.is_registered("identity"):
+            raise Exception("Unable to create thought: 'identity' component is not registered.")
+
+        # create thought, and add identity component to be sure key
+        # is generated
+        identity = self.__components_manager.create_component("identity")
+        return Thought(self.__components_manager, components=[identity])
 
     def get(self, key, load_linked=True):
-        # in cache
+        # in cache and loaded
         if self.__cache.has(key) and not self.__cache.is_lazy(key):
             cached = self.__cache.get(key)
             if load_linked:
@@ -30,7 +35,7 @@ class BrainStorageCache:
         if self.__cache.has(key):
             thought = self.__cache.get(key)
         else:
-            thought = Thought(self.__brain)
+            thought = Thought(self.__components_manager)
             # self.__cache.add_lazy(thought, key)
 
         # thought = Thought() if not self.__cache.has(key) else self.__cache.get(key)
@@ -59,7 +64,8 @@ class BrainStorageCache:
             deser = thought is None or self.__cache.is_lazy(key)
 
             if not thought:
-                thought = Thought(self.__brain)
+                print("new: ", key)
+                thought = Thought(self.__components_manager)
                 self.__cache.add_lazy(thought, key)
 
             if deser:
@@ -74,7 +80,7 @@ class BrainStorageCache:
         #     # if self.__cache.has(key) and not self.__cache.is_lazy(key):
         #     #     result.append(self.__cache.get(key))
         #     # else:
-        #     #     thought = Thought(self.__brain)
+        #     #     thought = Thought(self.__components_manager)
         #     #     thought = self.__serializer.deserialize(thought, record)
         #     #     result.append(thought)
 
