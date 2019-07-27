@@ -1,2 +1,2 @@
-# sarasvati
-Personal knowledge database
+# Sarasvati
+Personal knowledge database.

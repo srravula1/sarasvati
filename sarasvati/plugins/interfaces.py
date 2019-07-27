@@ -5,6 +5,7 @@ from yapsy.IPlugin import IPlugin as YapsyPlugin
 class Plugin(YapsyPlugin):
     def __init__(self):
         super().__init__()
+        self._api = None
 
     def activate(self):
         super().activate()
@@ -39,10 +40,23 @@ class CommandsPlugin(Plugin):
     def __init__(self):
         super().__init__()
 
+    def register(self, name: str, handler: callable):
+        plugin = self._api.plugins.get(category="CommandLine")
+        plugin.register("/c", handler)
+
+    def unregister(self, name: str):
+        pass
+
 
 class ComponentsPlugin(Plugin):
     def __init__(self):
         super().__init__()
+
+    def register(self, name: str, component: type, serializer: "ComponentSerializer") -> None:
+        self._api.components.register(name, component, serializer)
+
+    def unregister(self, name: str) -> None:
+        self._api.components.unregister(name)
 
 
 class StoragePlugin(Plugin):

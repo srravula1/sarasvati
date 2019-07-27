@@ -71,9 +71,9 @@ class Composite(metaclass=ABCMeta):
 
 
 class Thought(Composite):
-    def __init__(self, api, components=None):
-        super().__init__(components=components)
-        self.__api = api
+    def __init__(self, brain):
+        super().__init__()
+        self.__brain = brain
 
     @property
     def key(self):
@@ -100,16 +100,16 @@ class Thought(Composite):
         self.definition.description = value
 
     def save(self):
-        self.__api.storage.update(self)
+        self.__brain.storage.update(self)
 
     def delete(self):
-        self.__api.storage.delete(self)
+        self.__brain.storage.delete(self)
 
     def __getattr__(self, component_name):
         if self.has_component(component_name):
             return self.get_component(component_name)
         else:
-            component_instance = self.__api.components.create_component(component_name)
+            component_instance = self.__brain.components.create_component(component_name)
             self.add_component(component_instance)
             return component_instance
 
@@ -118,11 +118,50 @@ class Thought(Composite):
 
 
 class Brain:
-    def __init__(self, storage):
+    def __init__(self, components, storage):
         self.__storage = storage
+        self.__components = components
     
-    def create_thought(self):
-        self.__storage.add({"test": 123})
+    @property
+    def components(self):
+        return self.__components
+
+    @property
+    def storage(self):
+        return self.__storage
+
+    def create_thought(self, title: str, description: str = None, key: str = None):
+        # identity component is required, check it's presence first
+        if not self.__components.is_registered("identity"):
+            raise Exception("Unable to create thought: 'identity' component is not registered.")
+
+        # create thought, and add identity component
+        # identity = self.__components.create_component("identity")
+        thought = Thought(self)
+
+        # set key if provided
+        if key:
+           thought.identity.key = key
+
+        # set definition in provided
+        if title or description:
+           thought.definition.title = title
+           thought.definition.description = description
+
+        # link thought
+        #if link:
+        #    link_to = link[0]
+        #    link_type = link[1]
+        #    opposite = {"child": "parent", "parent": "child", "reference": "reference"}.get(link_type)
+        #    thought.links.add(link_to, opposite)
+        #    link_to.links.add(thought, link_type)
+
+        # return result
+        # self.__storage.add()
+
+        #print(thought, thought.key, thought.title)
+        #thought.save()
+        return thought
 
     def delete_thought(self):
         pass
@@ -141,7 +180,7 @@ class BrainManager:
 
     def open(self, path):
         storage = self.__api.plugins.get(category="Storage").open(path)
-        self.__active = Brain(storage)
+        self.__active = Brain(self.__api.components, storage)
         return self.__active
 
     @property
