@@ -42,7 +42,7 @@ class CommandsPlugin(Plugin):
 
     def register(self, name: str, handler: callable):
         plugin = self._api.plugins.get(category="CommandLine")
-        plugin.register("/c", handler)
+        plugin.register(name, handler)
 
     def unregister(self, name: str):
         pass
