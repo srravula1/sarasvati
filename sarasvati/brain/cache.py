@@ -1,26 +1,22 @@
-from sarasvati.brain.models import Thought
 from sarasvati.storage.storage import Storage
+from sarasvati.storage.serialization import Serializer
 
 
-class BrainStorageCache:
-    """
-    Storage manager.
-    """
+class BrainStorageCache(Storage):
+    def __init__(self, storage: Storage, serializer: Serializer):
+        """Initializes new instance of the BrainStorageCache class.
 
-    def __init__(self, components_manager, storage, serializer):
-        self.__components_manager = components_manager
+        Arguments:
+            storage {Storage} -- Raw storage to get data from.
+            serializer {Serializer} -- Serializer to parse raw data into Thoughts.
+        """
         self.__storage = storage
-        self.__cache = Cache()
         self.__serializer = serializer
+        self.__materializer = None
+        self.__cache = Cache()
 
-    def create(self):
-        if not self.__components_manager.is_registered("identity"):
-            raise Exception("Unable to create thought: 'identity' component is not registered.")
-
-        # create thought, and add identity component to be sure key
-        # is generated
-        identity = self.__components_manager.create_component("identity")
-        return Thought(self.__components_manager, components=[identity])
+    def set_materializer(self, value):
+        self.__materializer = value
 
     def get(self, key, load_linked=True):
         # in cache and loaded
@@ -35,7 +31,7 @@ class BrainStorageCache:
         if self.__cache.has(key):
             thought = self.__cache.get(key)
         else:
-            thought = Thought(self.__components_manager)
+            thought = self.__materializer() # Thought(self.__brain)
             # self.__cache.add_lazy(thought, key)
 
         # thought = Thought() if not self.__cache.has(key) else self.__cache.get(key)
@@ -52,6 +48,7 @@ class BrainStorageCache:
     def add(self, thought):
         data = self.__serializer.serialize(thought)
         self.__storage.add(data)
+        self.__cache.add(thought)
 
     def find(self, query):
         result = []
@@ -65,7 +62,7 @@ class BrainStorageCache:
 
             if not thought:
                 print("new: ", key)
-                thought = Thought(self.__components_manager)
+                thought = self.__materializer() # Thought(self.__brain)
                 self.__cache.add_lazy(thought, key)
 
             if deser:
@@ -80,7 +77,7 @@ class BrainStorageCache:
         #     # if self.__cache.has(key) and not self.__cache.is_lazy(key):
         #     #     result.append(self.__cache.get(key))
         #     # else:
-        #     #     thought = Thought(self.__components_manager)
+        #     #     thought = Thought(self.__brain)
         #     #     thought = self.__serializer.deserialize(thought, record)
         #     #     result.append(thought)
 

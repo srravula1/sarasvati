@@ -71,9 +71,9 @@ class Composite(metaclass=ABCMeta):
 
 
 class Thought(Composite):
-    def __init__(self, components_manager, components=[]):
+    def __init__(self, brain, components=[]):
         super().__init__(components=components)
-        self.__components_manager = components_manager
+        self.__brain = brain
         
     @property
     def key(self):
@@ -99,19 +99,17 @@ class Thought(Composite):
         """Sets description of thought."""
         self.definition.description = value
 
-    # def save(self):
-    #     self.__brain.save_thought(self)
+    def save(self):
+        self.__brain.save_thought(self)
 
-    # def delete(self):
-    #     self.__brain.delete_thought(self)
+    def delete(self):
+        self.__brain.delete_thought(self)
 
     def __getattr__(self, component_name):
         if self.has_component(component_name):
             return self.get_component(component_name)
         else:
-            component_instance = self.__components_manager.create_component(component_name)
-            self.add_component(component_instance)
-            return component_instance
-
+            return self.__brain.attach_component(self, component_name)
+            
     def __repr__(self):
         return "<{}>".format(self.definition.title)

@@ -1,5 +1,5 @@
-from sarasvati.brain.brain import BrainManager
 from sarasvati.brain.components import ComponentsManager
+from sarasvati.brain.manager import BrainManager
 from sarasvati.config import ConfigManager
 from sarasvati.packages import PackagesManager
 from sarasvati.plugins import (ApplicationPlugin, CommandLinePlugin,
