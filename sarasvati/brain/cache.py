@@ -1,9 +1,10 @@
+from sarasvati.brain.models import Thought
 from sarasvati.storage.storage import Storage
 from sarasvati.storage.serialization import Serializer
 
 
 class BrainStorageCache(Storage):
-    def __init__(self, storage: Storage, serializer: Serializer):
+    def __init__(self, brain, storage: Storage, serializer: Serializer):
         """Initializes new instance of the BrainStorageCache class.
 
         Arguments:
@@ -12,11 +13,8 @@ class BrainStorageCache(Storage):
         """
         self.__storage = storage
         self.__serializer = serializer
-        self.__materializer = None
         self.__cache = Cache()
-
-    def set_materializer(self, value):
-        self.__materializer = value
+        self.__brain = brain
 
     def get(self, key, load_linked=True):
         # in cache and loaded
@@ -31,7 +29,7 @@ class BrainStorageCache(Storage):
         if self.__cache.has(key):
             thought = self.__cache.get(key)
         else:
-            thought = self.__materializer() # Thought(self.__brain)
+            thought = Thought(self.__brain)
             # self.__cache.add_lazy(thought, key)
 
         # thought = Thought() if not self.__cache.has(key) else self.__cache.get(key)
@@ -62,7 +60,7 @@ class BrainStorageCache(Storage):
 
             if not thought:
                 print("new: ", key)
-                thought = self.__materializer() # Thought(self.__brain)
+                thought = Thought(self.__brain)
                 self.__cache.add_lazy(thought, key)
 
             if deser:
