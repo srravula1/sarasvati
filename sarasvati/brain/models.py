@@ -1,56 +1,97 @@
 from abc import ABCMeta, abstractmethod
+from typing import List
+
+
+class Component(metaclass=ABCMeta):
+    """Provides interface for a custom component."""
+
+    @abstractmethod
+    def __init__(self, name: str):
+        """
+        Initializes new instance of the Component class.
+        
+        Arguments:
+            name {str} -- Name of a component.
+        """
+        self.__component_name = name
+
+    @property
+    def name(self) -> str:
+        """
+        Returns name of a component.
+        
+        Returns:
+            str -- Name of a component.
+        """
+        return self.__component_name
 
 
 class Composite(metaclass=ABCMeta):
     @abstractmethod
-    def __init__(self, components=None):
+    def __init__(self, components: List[Component]=None):
         """
-        Initializes new instance of the Composite class.
-        :type components: list
-        :param components: Components to create composite from.
+        Initializes new instance of a Composite class.
+        
+        Keyword Arguments:
+            components {List[Component]} -- List of a components to build composite with. (default: {None})
         """
         self.__components = {}
-
         if components is not None:
             self.add_components(components)
 
-    def has_component(self, component_name):
+    def has_component(self, component_name: str) -> bool:
         """
-        Returns true if component already added, otherwise false
-        :rtype: bool
-        :type component_name: str
-        :param component_name: Name of the component
-        :return: True if component already added, otherwise false
+        Checks if composite has a component.
+        
+        Arguments:
+            component_name {str} -- Name of a component.
+        
+        Returns:
+            bool -- True if composite has a component.
         """
         return component_name in self.__components.keys()
 
-    def add_component(self, component):
+    def add_component(self, component: Component):
         """
-        Adds specified component
-        :type component: Component
-        :param component: Component to add
+        Add component to the composite.
+        
+        Arguments:
+            component {Component} -- Component.
+        
+        Raises:
+            TypeError: Raises if component not an instance of a Component class.
+            Exception: Raises if component already exist.
         """
+        if not isinstance(component, Component):
+            raise TypeError("Component '" + component.name + "' should be subclass of Component")
         if self.has_component(component.name):
             raise Exception("Component '" + component.name + "' already exist")
         self.__components[component.name] = component
         if hasattr(component, "on_added"):
             component.on_added(self)
 
-    def add_components(self, components):
+    def add_components(self, components: List[Component]):
         """
-        Adds specified list of components
-        :type components: List[Component]
-        :param components: Array of components
+        Adds list of components to the composite.
+        
+        Arguments:
+            components {List[Component]} -- [description]
         """
         for component in components:
             self.add_component(component)
 
-    def get_component(self, name):
+    def get_component(self, name: str) -> Component:
         """
-        Returns component using specified name. Raises exception if no component found.
-        :type name: str
-        :param name: Name of the component
-        :return: Component
+        Returns component using specified name
+        
+        Arguments:
+            name {str} -- Name of a component.
+        
+        Raises:
+            Exception: If no component found.
+        
+        Returns:
+            Component -- Component.
         """
         if name not in self.__components.keys():
             raise Exception("Component '{}' not found for '{}'"
@@ -59,14 +100,16 @@ class Composite(metaclass=ABCMeta):
         return self.__components[name]
 
     @property
-    def components(self):
+    def components(self) -> List[Component]:
         """
-        Returns list of components
-        :return: Components
+        Returns list of components.
+        
+        Returns:
+            List[Component] -- List of components
         """
         return self.__components.values()
 
-    def __getattr__(self, item):
+    def __getattr__(self, item: str) -> Component:
         return self.get_component(item)
 
 

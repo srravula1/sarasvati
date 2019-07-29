@@ -1,10 +1,11 @@
+from sarasvati.brain import IBrain
 from sarasvati.brain.models import Thought
-from sarasvati.storage.storage import Storage
-from sarasvati.storage.serialization import Serializer
+from sarasvati.brain.serialization import Serializer
+from sarasvati.storage import Storage
 
 
 class BrainStorageCache(Storage):
-    def __init__(self, brain, storage: Storage, serializer: Serializer):
+    def __init__(self, brain: IBrain, storage: Storage, serializer: Serializer):
         """Initializes new instance of the BrainStorageCache class.
 
         Arguments:
@@ -13,8 +14,8 @@ class BrainStorageCache(Storage):
         """
         self.__storage = storage
         self.__serializer = serializer
-        self.__cache = Cache()
         self.__brain = brain
+        self.__cache = Cache()
 
     def get(self, key, load_linked=True):
         # in cache and loaded

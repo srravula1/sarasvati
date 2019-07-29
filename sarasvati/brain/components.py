@@ -3,27 +3,7 @@ from collections import namedtuple
 from inspect import signature
 from typing import List, Type
 
-
-class Component(metaclass=ABCMeta):
-    """
-    Provides interface for custom component.
-    """
-    @abstractmethod
-    def __init__(self, name):
-        """
-        Initializes new instance of the Component class.
-        :type name: str
-        :param name: Name of the component. Should be unique.
-        """
-        self.__component_name = name
-
-    @property
-    def name(self):
-        """
-        Returns name of the component.
-        :return: Name
-        """
-        return self.__component_name
+from sarasvati.brain.models import Component
 
 
 class ComponentSerializer(metaclass=ABCMeta):

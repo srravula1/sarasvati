@@ -1,25 +1,25 @@
+from sarasvati.brain import IBrain
 from sarasvati.brain.cache import BrainStorageCache
 from sarasvati.brain.components import ComponentsManager
-from sarasvati.brain.models import Thought
-from sarasvati.storage.serialization import Serializer
-from sarasvati.storage.storage import Storage
+from sarasvati.brain.models import Component, Thought
+from sarasvati.brain.serialization import Serializer
+from sarasvati.storage import Storage
 
 
-class Brain:
+class Brain(IBrain):
     def __init__(self, storage: Storage, components: ComponentsManager):
         self.__components = components
         self.__storage = BrainStorageCache(self, storage, Serializer(components))
 
-    def create_component(self, name):
+    def create_component(self, name: str) -> Component:
         return self.__components.create_component(name)
 
-    def attach_component(self, thought, component_name):
-        if not thought.has_component(component_name):
-            component_instance = self.__components.create_component(component_name)
-            thought.add_component(component_instance)
-            return component_instance
+    def attach_component(self, thought: Thought, component_name: str) -> Component:
+        component_instance = self.__components.create_component(component_name)
+        thought.add_component(component_instance)
+        return component_instance
 
-    def save_thought(self, thought):
+    def save_thought(self, thought: Thought):
         self.__storage.update(thought)
 
     def create_thought(self, title: str, description: str = None, key: str = None):
@@ -41,10 +41,10 @@ class Brain:
         self.__storage.add(thought)
         return thought
 
-    def delete_thought(self, thought):
+    def delete_thought(self, thought: Thought):
         self.__storage.remove(thought)
 
-    def find_thoughts(self, query):
+    def find_thoughts(self, query: dict):
         return self.__storage.find(query)
 
     def activate_thought(self):

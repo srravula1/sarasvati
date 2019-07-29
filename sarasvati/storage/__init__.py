@@ -1,1 +1,1 @@
-from sarasvati.storage.storage import Storage
+from .storage import Storage
