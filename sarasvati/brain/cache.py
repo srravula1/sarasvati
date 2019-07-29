@@ -1,11 +1,9 @@
-from sarasvati.brain import IBrain
-from sarasvati.brain.models import Thought
 from sarasvati.brain.serialization import Serializer
 from sarasvati.storage import Storage
 
 
 class BrainStorageCache(Storage):
-    def __init__(self, brain: IBrain, storage: Storage, serializer: Serializer):
+    def __init__(self, factory, storage: Storage, serializer: Serializer):
         """Initializes new instance of the BrainStorageCache class.
 
         Arguments:
@@ -14,7 +12,7 @@ class BrainStorageCache(Storage):
         """
         self.__storage = storage
         self.__serializer = serializer
-        self.__brain = brain
+        self.__factory = factory
         self.__cache = Cache()
 
     def get(self, key, load_linked=True):
@@ -30,7 +28,7 @@ class BrainStorageCache(Storage):
         if self.__cache.has(key):
             thought = self.__cache.get(key)
         else:
-            thought = Thought(self.__brain)
+            thought = self.__factory.create() # Thought(self.__brain)
             # self.__cache.add_lazy(thought, key)
 
         # thought = Thought() if not self.__cache.has(key) else self.__cache.get(key)
@@ -45,6 +43,8 @@ class BrainStorageCache(Storage):
         return thought
 
     def add(self, thought):
+        if not thought.identity.key:
+            raise Exception("No idenity provided")
         data = self.__serializer.serialize(thought)
         self.__storage.add(data)
         self.__cache.add(thought)
@@ -61,7 +61,7 @@ class BrainStorageCache(Storage):
 
             if not thought:
                 print("new: ", key)
-                thought = Thought(self.__brain)
+                thought = self.__factory.create() # Thought(self.__brain)
                 self.__cache.add_lazy(thought, key)
 
             if deser:

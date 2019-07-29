@@ -1,36 +1,13 @@
-from abc import ABCMeta, abstractmethod
-from collections import namedtuple
 from inspect import signature
 from typing import List, Type
 
 from sarasvati.brain.models import Component
 
 
-class ComponentSerializer(metaclass=ABCMeta):
-    @abstractmethod
-    def serialize(self, component: Component) -> dict:
-        """
-        Serializes component into dictionary.
-        :param component: Component to serialize
-        """
-        pass
-
-    @abstractmethod
-    def deserialize(self, data: dict, component: Component):
-        """
-        Deserialize component from dictionary
-        :param data: Data to deserialize from.
-        :param component: Component to deserialize to.
-        """
-        pass
-
-
 class ComponentsManager:
     """
     Components manager.
     """
-
-    __component = namedtuple("ComponentData", ["component", "serializer"])
 
     def __init__(self, api=None, log=None):
         """
@@ -55,7 +32,7 @@ class ComponentsManager:
         """
         if name not in self.__components:
             raise Exception("The '{}' component is not registered.".format(name))
-        return self.__components[name].component
+        return self.__components[name]
 
     def create_component(self, name: str) -> Component:
         """
@@ -68,17 +45,7 @@ class ComponentsManager:
             return component_class(api=self.__api)
         return component_class()
 
-    def get_serializer(self, name: str) -> ComponentSerializer:
-        """
-        Get serializer for specified component.
-        :param name: Name of a component.
-        :return: Serializer.
-        """
-        if name not in self.__components:
-            raise Exception("The '{}' component is not registered.".format(name))
-        return self.__components[name].serializer
-
-    def register(self, name: str, component: type, serializer: ComponentSerializer) -> None:
+    def register(self, name: str, component: type) -> None:
         """
         Register new component.
         :param name: Name of a component.
@@ -87,12 +54,10 @@ class ComponentsManager:
         """
         if not issubclass(component, Component):
             raise ValueError("The 'component' argument should be subclass of Component class.")
-        if not isinstance(serializer, ComponentSerializer):
-            raise ValueError("The 'serializer' argument should be instance of ComponentSerializer class.")
         if name in self.__components:
             raise Exception("Component '{}' already registered.".format(name))
 
-        self.__components[name] = self.__component(component, serializer)
+        self.__components[name] = component
 
     def unregister(self, name: str) -> None:
         """

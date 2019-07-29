@@ -1,32 +1,20 @@
-from sarasvati.brain import IBrain
-from sarasvati.brain.cache import BrainStorageCache
-from sarasvati.brain.components import ComponentsManager
-from sarasvati.brain.models import Component, Thought
-from sarasvati.brain.serialization import Serializer
-from sarasvati.storage import Storage
+from sarasvati.brain.models import Thought
 
 
-class Brain(IBrain):
-    def __init__(self, storage: Storage, components: ComponentsManager):
-        self.__components = components
-        self.__storage = BrainStorageCache(self, storage, Serializer(components))
+class Brain:
+    def __init__(self, storage, factory):
+        self.__storage = storage
+        self.__factory = factory
 
-    def create_component(self, name: str) -> Component:
-        return self.__components.create_component(name)
-
-    def attach_component(self, thought: Thought, component_name: str) -> Component:
-        component_instance = self.__components.create_component(component_name)
-        thought.add_component(component_instance)
-        return component_instance
+    @property
+    def factory(self):
+        return self.__factory
 
     def save_thought(self, thought: Thought):
         self.__storage.update(thought)
 
-    def create_thought(self, title: str, description: str = None, key: str = None):
-        if not self.__components.is_registered("identity"):
-            raise Exception("Unable to create thought: 'identity' component is not registered.")
-        identity = self.__components.create_component("identity")
-        thought = Thought(self, components=[identity])
+    def create_thought(self, title: str, description: str = None, key: str = None):        
+        thought = self.__factory.create()
 
         # set key if provided
         if key:

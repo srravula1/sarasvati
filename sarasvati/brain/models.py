@@ -152,7 +152,7 @@ class Thought(Composite):
         if self.has_component(component_name):
             return self.get_component(component_name)
         else:
-            return self.__brain.attach_component(self, component_name)
+            return self.__brain.factory.attach_component(self, component_name)
             
     def __repr__(self):
         return "<{}>".format(self.definition.title)

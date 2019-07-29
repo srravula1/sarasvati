@@ -1,5 +1,6 @@
 from sarasvati.brain.components import ComponentsManager
 from sarasvati.brain.manager import BrainManager
+from sarasvati.brain.serialization import SerializationManager
 from sarasvati.config import ConfigManager
 from sarasvati.packages import PackagesManager
 from sarasvati.plugins import (ApplicationPlugin, CommandLinePlugin,
@@ -33,6 +34,7 @@ class Sarasvati:
         self.components = ComponentsManager(
             api=self
         )
+        self.serializers = SerializationManager()
 
         # Brain manager
         self.brain = BrainManager(api=self)
