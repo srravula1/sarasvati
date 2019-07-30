@@ -1,5 +1,5 @@
 from sarasvati.brain.brain import Brain
-from sarasvati.brain.cache import ThoughtsStorage, ThoughtCreator
+from sarasvati.brain.storage.cache import ThoughtsStorage, ThoughtCreator
 from sarasvati.brain.models import Component, Thought
 from sarasvati.brain.serialization import SerializationManager, Serializer
 
