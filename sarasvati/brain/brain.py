@@ -1,5 +1,6 @@
 from sarasvati.brain.models import Thought
 
+from sarasvati.brain.models import Component, Thought
 
 class Brain:
     def __init__(self, storage, factory):
@@ -14,7 +15,7 @@ class Brain:
         self.__storage.update(thought)
 
     def create_thought(self, title: str, description: str = None, key: str = None):        
-        thought = self.__factory.create()
+        thought = Thought(self)
 
         # set key if provided
         if key:

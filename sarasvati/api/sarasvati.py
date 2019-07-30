@@ -7,7 +7,6 @@ from sarasvati.plugins import (ApplicationPlugin, CommandLinePlugin,
                                CommandsPlugin, ComponentsPlugin,
                                PluginsManager, StoragePlugin)
 
-
 class Sarasvati:
     def __init__(self):
         # Config manager
@@ -38,3 +37,5 @@ class Sarasvati:
 
         # Brain manager
         self.brain = BrainManager(api=self)
+
+        
