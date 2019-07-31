@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+from inspect import signature
 
 
 class ComponentSerializer(metaclass=ABCMeta):
@@ -21,8 +22,9 @@ class ComponentSerializer(metaclass=ABCMeta):
 
 
 class SerializationManager:    
-    def __init__(self):
+    def __init__(self, api=None):
         self.__serializers = {}
+        self.__api = api
 
     def get_serializer(self, name: str) -> ComponentSerializer:
         """
@@ -41,12 +43,16 @@ class SerializationManager:
         :param component: Class of a component.
         :param serializer: Serializer instance.
         """
-        if not isinstance(serializer, ComponentSerializer):
-            raise ValueError("The 'serializer' argument should be instance of ComponentSerializer class.")
+        if not issubclass(serializer, ComponentSerializer):
+            raise ValueError("The 'serializer' argument should be subclass of ComponentSerializer class.")
         if name in self.__serializers:
             raise Exception("Serializer '{}' already registered.".format(name))
 
-        self.__serializers[name] = serializer
+        # make an instance of a serializer
+        if "api" in signature(serializer.__init__).parameters:
+            self.__serializers[name] = serializer(self.__api)
+        else:
+            self.__serializers[name] = serializer()
 
     def unregister(self, name: str) -> None:
         """
