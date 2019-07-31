@@ -1,5 +1,5 @@
-from itertools import chain
 from inspect import signature
+from itertools import chain
 
 from sarasvati.brain.components import ComponentsManager
 from sarasvati.brain.models import Component, Thought
@@ -10,14 +10,13 @@ from sarasvati.brain.storage import ThoughtCreator, ThoughtsStorage
 class Brain:
     def __init__(self, api, path: str):
         self.__api = api
-        self.__brain_api = BrainApi(self)
         self.__components = self.__open_components_manager()
         self.__serialization = self.__open_serialization_manager()
         self.__storage = ThoughtsStorage(
             self.__open_storage(path), 
             Serializer(self.__serialization, self.__components),
             BrainThoughtCreator(self))
-   
+
     @property
     def storage(self):
         return self.__storage
@@ -59,21 +58,24 @@ class Brain:
         pass
 
     def __get_components(self):
-        return list(chain.from_iterable(list(map(lambda x: x.get_components(), self.__api.plugins.find(category="Components")))))
-        
+        component_plugins = self.__api.plugins.find(category="Components")
+        return list(chain.from_iterable(map(
+            lambda x: x.get_components(), 
+            component_plugins
+        )))
 
     def __open_storage(self, path: str):
         plugin = self.__api.plugins.get(category="Storage")
         return plugin.open(path)
 
     def __open_components_manager(self):
-        components_manager = ComponentsManager(api=self.__brain_api)
+        components_manager = ComponentsManager(api=BrainApi(self))
         for component in self.__get_components():
             components_manager.register(component[0], component[1])
         return components_manager
 
     def __open_serialization_manager(self):
-        serialization_manager = SerializationManager(api=self.__brain_api)
+        serialization_manager = SerializationManager(api=BrainApi(self))
         for component in self.__get_components():
             serialization_manager.register(component[0], component[2])
         return serialization_manager
