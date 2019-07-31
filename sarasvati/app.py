@@ -13,9 +13,6 @@ def run():
     for c in api.plugins.find(category="Commands"):
         c.activate()
 
-    for c in api.plugins.find(category="Components"):
-        c.activate()
-
     app = api.plugins.get(category="Application")
     app.activate()
 

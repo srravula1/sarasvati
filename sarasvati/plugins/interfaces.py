@@ -52,13 +52,8 @@ class ComponentsPlugin(Plugin):
     def __init__(self):
         super().__init__()
 
-    def register(self, name: str, component: type, serializer: "ComponentSerializer") -> None:
-        self._api.components.register(name, component)
-        self._api.serializers.register(name, serializer)
-
-    def unregister(self, name: str) -> None:
-        self._api.components.unregister(name)
-        self._api.serializers.unregister(name)
+    def get_components(self):
+        pass
 
 
 class StoragePlugin(Plugin):

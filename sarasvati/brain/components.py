@@ -9,7 +9,7 @@ class ComponentsManager:
     Components manager.
     """
 
-    def __init__(self, api=None, log=None):
+    def __init__(self, api=None):
         """
         Initialize new instance of the ComponentsManager class.
         """

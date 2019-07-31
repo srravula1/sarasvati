@@ -29,12 +29,6 @@ class Sarasvati:
                 "Storage": StoragePlugin
             })
 
-        # Components
-        self.components = ComponentsManager(
-            api=self
-        )
-        self.serializers = SerializationManager()
-
         # Brain manager
         self.brain = BrainManager(api=self)
 
