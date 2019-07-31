@@ -1,6 +1,4 @@
-from sarasvati.brain.components import ComponentsManager
 from sarasvati.brain.manager import BrainManager
-from sarasvati.brain.serialization import SerializationManager
 from sarasvati.config import ConfigManager
 from sarasvati.packages import PackagesManager
 from sarasvati.plugins import (ApplicationPlugin, CommandLinePlugin,
@@ -10,13 +8,13 @@ from sarasvati.plugins import (ApplicationPlugin, CommandLinePlugin,
 class Sarasvati:
     def __init__(self):
         # Config manager
-        self.__config = ConfigManager("config.yml")
-        self.__config.open()
+        self.config = ConfigManager("config.yml")
+        self.config.open()
 
         # Packages manager
         self.packages = PackagesManager(
-            self.__config.packages.repositories,
-            self.__config.packages.path)
+            self.config.packages.repositories,
+            self.config.packages.path)
 
         # Plugins manager
         self.plugins = PluginsManager(

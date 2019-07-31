@@ -1,5 +1,6 @@
 from inspect import signature
 from itertools import chain
+from urllib.parse import urlparse
 
 from sarasvati.brain.components import ComponentsManager
 from sarasvati.brain.models import Component, Thought
@@ -64,9 +65,22 @@ class Brain:
             component_plugins
         )))
 
+    def __get_storages(self):
+        storages_plugins = self.__api.plugins.find(category="Storage")
+        return list(chain.from_iterable(map(
+            lambda x: x.get_storages(), 
+            storages_plugins
+        )))
+
     def __open_storage(self, path: str):
-        plugin = self.__api.plugins.get(category="Storage")
-        return plugin.open(path)
+        uri = urlparse(path)
+        if not uri.netloc:
+            raise ValueError("Protocol is not defined")
+
+        for storage in self.__get_storages():
+            if uri.scheme == storage[0]:
+                return storage[1](uri.netloc + uri.path)
+        raise Exception(f"Unable to finde storage for '{uri.scheme}' protocol")
 
     def __open_components_manager(self):
         components_manager = ComponentsManager(api=BrainApi(self))

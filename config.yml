@@ -1,3 +1,5 @@
+brains:
+  path: brains
 packages:
   path: packages
   repositories:

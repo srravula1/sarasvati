@@ -60,5 +60,5 @@ class StoragePlugin(Plugin):
     def __init__(self):
         super().__init__()
 
-    def open(self):
+    def get_storages(self):
         pass

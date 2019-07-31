@@ -79,19 +79,22 @@ class ThoughtsStorage:
             thought = self.__cache.get(key)
             deser = thought is None or self.__cache.is_lazy(key)
 
-            # todo remove any lazines
             if not thought:
-                print("new: ", key)
-                thought = self.__creator.create() # Thought(self.__brain)
+                # new thought created. add it to cache as a lazy
+                # thought because it can be used (linked to) in
+                # deserialization code below. 
+                # Example: T1-T>2->T1. it requires to add T1
+                # to cache as lazy in order to deserialize T2
+                # (because it references to T1)
+                thought = self.__creator.create()
                 self.__cache.add_lazy(thought, key)
 
             if deser:
-                print("deser: ", record)
+                # deserialize data and add thought to cache
                 self.__serializer.deserialize(thought, record)
                 self.__cache.add(thought, False)
             result.append(thought)
 
-        print("find result", result)
         return result
 
     def update(self, thought):
