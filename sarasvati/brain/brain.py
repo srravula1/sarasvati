@@ -10,6 +10,8 @@ from sarasvati.brain.storage import ThoughtCreator, ThoughtsStorage
 
 class Brain:
     def __init__(self, api, path: str):
+        self.__active_thought = None
+
         self.__api = api
         self.__components = self.__open_components_manager()
         self.__serialization = self.__open_serialization_manager()
@@ -17,6 +19,10 @@ class Brain:
             self.__open_storage(path), 
             Serializer(self.__serialization, self.__components),
             BrainThoughtCreator(self))
+
+    @property
+    def active_thought(self):
+        return self.__active_thought
 
     @property
     def storage(self):
@@ -33,7 +39,7 @@ class Brain:
     def save_thought(self, thought: Thought):
         self.__storage.update(thought)
 
-    def create_thought(self, title: str, description: str = None, key: str = None):        
+    def create_thought(self, title: str, description: str = None, key: str = None, link=None):
         thought = Thought(self)
 
         # set key if provided
@@ -45,6 +51,13 @@ class Brain:
             thought.definition.title = title
             thought.definition.description = description
 
+        # set link if provided
+        if link:
+            __opposite = {"child": "parent", "parent": "child", "reference": "reference"}
+            thought.links.add(link[0], __opposite[link[1]])
+            link[0].links.add(thought, link[1])
+            link[0].save()
+
         # save and return
         self.__storage.add(thought)
         return thought
@@ -55,8 +68,8 @@ class Brain:
     def find_thoughts(self, query: dict):
         return self.__storage.find(query)
 
-    def activate_thought(self):
-        pass
+    def activate_thought(self, value):
+        self.__active_thought = value
 
     def __get_components(self):
         component_plugins = self.__api.plugins.find(category="Components")

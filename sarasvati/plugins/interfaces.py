@@ -40,13 +40,6 @@ class CommandsPlugin(Plugin):
     def __init__(self):
         super().__init__()
 
-    def register(self, name: str, handler: callable):
-        plugin = self._api.plugins.get(category="CommandLine")
-        plugin.register(name, handler)
-
-    def unregister(self, name: str):
-        pass
-
 
 class ComponentsPlugin(Plugin):
     def __init__(self):

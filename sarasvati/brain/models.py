@@ -142,6 +142,9 @@ class Thought(Composite):
         """Sets description of thought."""
         self.definition.description = value
 
+    def activate(self):
+        self.__brain.activate_thought(self)
+
     def save(self):
         self.__brain.save_thought(self)
 

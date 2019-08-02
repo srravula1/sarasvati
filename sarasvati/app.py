@@ -10,8 +10,13 @@ def run():
     print("Run sarasvati")
     api = Sarasvati()
 
-    for c in api.plugins.find(category="Commands"):
-        c.activate()
+    # register all the commands
+    command_line = api.plugins.get(category="CommandLine")
+    if command_line:
+        for commands_plugin in api.plugins.find(category="Commands"):
+            commands = commands_plugin.get_commands()
+            for command in commands:
+                command_line.register(command[0], command[1])
 
     app = api.plugins.get(category="Application")
     app.activate()
