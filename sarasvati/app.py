@@ -7,7 +7,7 @@ getLogger("urllib3.connectionpool").setLevel(CRITICAL)
 getLogger("yapsy").setLevel(CRITICAL)
 
 def run():
-    print("Run sarasvati")
+    print("Sarasvati")
     api = Sarasvati()
 
     # register all the commands

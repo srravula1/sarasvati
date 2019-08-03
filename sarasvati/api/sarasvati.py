@@ -28,6 +28,6 @@ class Sarasvati:
             })
 
         # Brain manager
-        self.brain = BrainManager(api=self)
+        self.brains = BrainManager(api=self)
 
         

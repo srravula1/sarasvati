@@ -1,6 +1,5 @@
 from inspect import signature
 from itertools import chain
-from urllib.parse import urlparse
 
 from sarasvati.brain.components import ComponentsManager
 from sarasvati.brain.models import Component, Thought
@@ -19,6 +18,11 @@ class Brain:
             self.__open_storage(path), 
             Serializer(self.__serialization, self.__components),
             BrainThoughtCreator(self))
+        self.__path = path
+
+    @property
+    def path(self):
+        return self.__path.split("://")[1]
 
     @property
     def active_thought(self):
@@ -86,14 +90,18 @@ class Brain:
         )))
 
     def __open_storage(self, path: str):
-        uri = urlparse(path)
-        if not uri.netloc:
+        tokens = path.split("://")
+        scheme = tokens[0]
+        path = tokens[1]
+
+        if not scheme:
             raise ValueError("Protocol is not defined")
 
         for storage in self.__get_storages():
-            if uri.scheme == storage[0]:
-                return storage[1](uri.netloc + uri.path)
-        raise Exception(f"Unable to finde storage for '{uri.scheme}' protocol")
+            if storage[0] == scheme:
+                return storage[1](path)
+
+        raise Exception(f"Unable to finde storage for '{scheme}' protocol")
 
     def __open_components_manager(self):
         components_manager = ComponentsManager(api=BrainApi(self))

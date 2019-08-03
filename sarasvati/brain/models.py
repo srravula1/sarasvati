@@ -117,7 +117,11 @@ class Thought(Composite):
     def __init__(self, brain, components=[]):
         super().__init__(components=components)
         self.__brain = brain
-        
+
+    @property
+    def brain(self):
+        return self.__brain
+
     @property
     def key(self):
         return self.identity.key
