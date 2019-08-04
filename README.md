@@ -1,5 +1,5 @@
 <p align="center">
-    ![Logo](assets/icon.png)
+    <img src="assets/icon.png"/>
 </p>
 
 # Sarasvati
