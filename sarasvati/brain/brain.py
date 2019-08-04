@@ -22,6 +22,11 @@ class Brain:
             Serializer(self.__serialization, self.__components),
             BrainThoughtCreator(self))
         self.__path = path
+        self.__name = self.__path.split("/")[-1]
+
+    @property
+    def name(self):
+        return self.__name
 
     @property
     def components(self):
