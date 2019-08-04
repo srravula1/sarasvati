@@ -1,3 +1,5 @@
+from collections import namedtuple
+from typing import List
 
 from yapsy.IPlugin import IPlugin as YapsyPlugin
 
@@ -41,11 +43,13 @@ class CommandsPlugin(Plugin):
         super().__init__()
 
 
+ComponentInfo = namedtuple("ComponentInfo", ["name", "component", "serializer"])
+
 class ComponentsPlugin(Plugin):
     def __init__(self):
         super().__init__()
 
-    def get_components(self):
+    def get_components(self) -> List[ComponentInfo]:
         pass
 
 

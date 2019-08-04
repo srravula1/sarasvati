@@ -1,3 +1,6 @@
+import os
+import platform
+import subprocess
 from inspect import signature
 from itertools import chain
 
@@ -5,6 +8,7 @@ from sarasvati.brain.components import ComponentsManager
 from sarasvati.brain.models import Component, Thought
 from sarasvati.brain.serialization import SerializationManager, Serializer
 from sarasvati.brain.storage import ThoughtCreator, ThoughtsStorage
+from sarasvati.plugins import ComponentInfo
 
 
 class Brain:
@@ -19,6 +23,10 @@ class Brain:
             Serializer(self.__serialization, self.__components),
             BrainThoughtCreator(self))
         self.__path = path
+
+    @property
+    def components(self):
+        return self.__components
 
     @property
     def path(self):
@@ -106,13 +114,17 @@ class Brain:
     def __open_components_manager(self):
         components_manager = ComponentsManager(api=BrainApi(self))
         for component in self.__get_components():
-            components_manager.register(component[0], component[1])
+            if not isinstance(component, ComponentInfo):
+                raise Exception("Component registration info should be an instance of ComponentInfo class.")
+            components_manager.register(component.name, component.component)
         return components_manager
 
     def __open_serialization_manager(self):
         serialization_manager = SerializationManager(api=BrainApi(self))
         for component in self.__get_components():
-            serialization_manager.register(component[0], component[2])
+            if not isinstance(component, ComponentInfo):
+                raise Exception("Component registration info should be an instance of ComponentInfo class.")
+            serialization_manager.register(component.name, component.serializer)
         return serialization_manager
 
 
@@ -140,3 +152,14 @@ class BrainApi:
         thought.title = "<Lazy>"
         self.brain.storage.cache.add(thought, lazy=True)
         return thought
+
+    def is_component_registered(self, name):
+        return self.brain.components.is_registered(name)
+
+    def open_path(self, path):
+        if platform.system() == "Windows":
+            os.startfile(path)
+        elif platform.system() == "Darwin":
+            subprocess.Popen(["open", path])
+        else:
+            subprocess.Popen(["xdg-open", path])

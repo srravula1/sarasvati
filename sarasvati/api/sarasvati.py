@@ -1,3 +1,7 @@
+import os
+import platform
+import subprocess
+
 from sarasvati.brain.manager import BrainManager
 from sarasvati.config import ConfigManager
 from sarasvati.packages import PackagesManager
@@ -30,4 +34,10 @@ class Sarasvati:
         # Brain manager
         self.brains = BrainManager(api=self)
 
-        
+    def open_path(self, path):
+        if platform.system() == "Windows":
+            os.startfile(path)
+        elif platform.system() == "Darwin":
+            subprocess.Popen(["open", path])
+        else:
+            subprocess.Popen(["xdg-open", path])

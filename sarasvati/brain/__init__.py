@@ -1,2 +1,2 @@
-from .brain import Brain
+from .brain import Brain, BrainApi
 from .models import Thought
