@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="assets/icon2.svg" height="64px"/>
+    <img src="assets/icon.svg" height="64px"/>
 </p>
 
 # Sarasvati
