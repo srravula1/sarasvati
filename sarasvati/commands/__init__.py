@@ -1,1 +1,1 @@
-from .command import Command, CommandResult, CommandException
+from .command import Command, CommandResult, CommandException, CommandArguments

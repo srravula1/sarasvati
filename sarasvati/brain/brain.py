@@ -1,7 +1,6 @@
 import os
 import platform
 import subprocess
-from inspect import signature
 from itertools import chain
 
 from sarasvati.brain.components import ComponentsManager
