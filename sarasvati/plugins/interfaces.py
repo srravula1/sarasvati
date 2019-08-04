@@ -38,6 +38,8 @@ class CommandLinePlugin(Plugin):
         pass
 
 
+CommandInfo = namedtuple("ComponentInfo", ["CommandInfo", "handler"])
+
 class CommandsPlugin(Plugin):
     def __init__(self):
         super().__init__()
