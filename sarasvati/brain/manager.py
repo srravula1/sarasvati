@@ -25,6 +25,10 @@ class BrainManager:
         self.__active = Brain(self.__api, path)
         return self.__active
 
+    def create(self, path) -> Brain:
+        self.__active = Brain(self.__api, path, create=True)
+        return self.__active
+
     @property
     def active(self) -> Brain:
         """

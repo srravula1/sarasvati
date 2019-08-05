@@ -11,14 +11,14 @@ from sarasvati.plugins import ComponentInfo
 
 
 class Brain:
-    def __init__(self, api, path: str):
+    def __init__(self, api, path: str, create: bool = False):
         self.__active_thought = None
 
         self.__api = api
         self.__components = self.__open_components_manager()
         self.__serialization = self.__open_serialization_manager()
         self.__storage = ThoughtsStorage(
-            self.__open_storage(path), 
+            self.__open_storage(path, create), 
             Serializer(self.__serialization, self.__components),
             BrainThoughtCreator(self))
         self.__path = path
@@ -101,7 +101,7 @@ class Brain:
             storages_plugins
         )))
 
-    def __open_storage(self, path: str):
+    def __open_storage(self, path: str, create: bool = False):
         tokens = path.split("://")
         scheme = tokens[0]
         path = tokens[1]
@@ -111,9 +111,9 @@ class Brain:
 
         for storage in self.__get_storages():
             if storage[0] == scheme:
-                return storage[1](path)
+                return storage[1](path, create)
 
-        raise Exception(f"Unable to finde storage for '{scheme}' protocol")
+        raise Exception(f"Unable to find storage for '{scheme}' protocol")
 
     def __open_components_manager(self):
         components_manager = ComponentsManager(api=BrainApi(self))

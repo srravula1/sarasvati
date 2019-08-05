@@ -1,5 +1,6 @@
-brains:
-  path: brains
+stores:
+  local:
+    path: brains
 packages:
   path: packages
   repositories:

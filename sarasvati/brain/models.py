@@ -99,6 +99,10 @@ class Composite(metaclass=ABCMeta):
 
         return self.__components[name]
 
+    def delete_component(self, name: str):
+        # todo: check for presence
+        del self.__components[name]
+
     @property
     def components(self) -> List[Component]:
         """
