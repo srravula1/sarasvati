@@ -1,4 +1,5 @@
-from sarasvati.plugins.interfaces import (ApplicationPlugin, CommandLinePlugin,
-                                          CommandsPlugin, ComponentsPlugin,
-                                          StoragePlugin, ComponentInfo, CommandInfo)
+from sarasvati.plugins.interfaces import (ApplicationPlugin, CommandInfo,
+                                          CommandLinePlugin, CommandsPlugin,
+                                          ComponentInfo, ComponentsPlugin,
+                                          ScreenPlugin, StoragePlugin)
 from sarasvati.plugins.manager import PluginsManager

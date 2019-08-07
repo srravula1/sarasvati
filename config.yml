@@ -1,8 +1,8 @@
-stores:
-  local:
-    path: brains
 packages:
   path: packages
   repositories:
   - https://pastebin.com/raw/qqCwanS7
   - https://pastebin.com/raw/MiX4hmHy
+stores:
+  local:
+    path: brains

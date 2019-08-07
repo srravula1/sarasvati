@@ -12,11 +12,15 @@ yapsy = "^1.12"
 ansimarkup = "^1.4"
 munch = "^2.3"
 tinydb = "^3.13"
+prompt_toolkit = "^2.0"
+pygments = "^2.4"
+pyqt5 = "^5.13"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"
 pylint = "^2.3"
 autopep8 = "^1.4"
+rope = "^0.14.0"
 
 [tool.poetry.scripts]
 sarasvati = "sarasvati:main"

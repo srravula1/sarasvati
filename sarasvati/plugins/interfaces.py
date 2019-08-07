@@ -38,11 +38,14 @@ class CommandLinePlugin(Plugin):
         pass
 
 
-CommandInfo = namedtuple("ComponentInfo", ["CommandInfo", "handler"])
+CommandInfo = namedtuple("CommandInfo", ["command", "description", "handler"])
 
 class CommandsPlugin(Plugin):
     def __init__(self):
         super().__init__()
+
+    def get_commands(self):
+        pass
 
 
 ComponentInfo = namedtuple("ComponentInfo", ["name", "component", "serializer"])
@@ -61,3 +64,7 @@ class StoragePlugin(Plugin):
 
     def get_storages(self):
         pass
+
+
+class ScreenPlugin(Plugin):
+    pass

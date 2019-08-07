@@ -5,6 +5,8 @@ from sarasvati.plugins import CommandInfo
 
 basicConfig(level=DEBUG)
 getLogger("urllib3.connectionpool").setLevel(CRITICAL)
+getLogger("PyQt5.uic.uiparser").setLevel(CRITICAL)
+getLogger("PyQt5.uic.properties").setLevel(CRITICAL)
 getLogger("yapsy").setLevel(CRITICAL)
 
 def run():
@@ -19,7 +21,7 @@ def run():
             for command in commands:
                 if not isinstance(command, CommandInfo):
                     raise Exception("Command registration info should be an instance of the CommandInfo class.")
-                command_line.register(command[0], command[1])
+                command_line.register(command)
 
     app = api.plugins.get(category="Application")
     app.activate()
