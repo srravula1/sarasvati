@@ -9,3 +9,6 @@ __pycache__
 # sarasvati
 /packages
 /packages-dev
+
+# brains
+/brains
