@@ -22,6 +22,6 @@ class YamlMetadataParser(IMetadataParser):
 
         # convert dictionary into Package objects
         return {
-            k: Package(k, v["name"], v["url"], v["author"]) 
+            k: Package(k, v["name"], v["description"], v["url"], v["author"]) 
             for k, v in data.items()
         }

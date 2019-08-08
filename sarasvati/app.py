@@ -17,6 +17,7 @@ def run():
     command_line = api.plugins.get(category="CommandLine")
     if command_line:
         for commands_plugin in api.plugins.find(category="Commands"):
+            commands_plugin.activate()
             commands = commands_plugin.get_commands()
             for command in commands:
                 if not isinstance(command, CommandInfo):
@@ -24,6 +25,7 @@ def run():
                 command_line.register(command)
 
     app = api.plugins.get(category="Application")
+    api.before_start.notify()
     app.activate()
 
 if __name__ == "__main__":

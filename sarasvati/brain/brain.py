@@ -3,13 +3,11 @@ import platform
 import subprocess
 from itertools import chain
 
-from sarasvati.brain.components import ComponentsManager
+from sarasvati.brain.components import ComponentInfo, ComponentsManager
 from sarasvati.brain.models import Component, Thought
 from sarasvati.brain.serialization import SerializationManager, Serializer
 from sarasvati.brain.storage import ThoughtCreator, ThoughtsStorage
-from sarasvati.plugins import ComponentInfo
-
-from .event import Event
+from sarasvati.core.event import Event
 
 
 class Brain:
@@ -122,18 +120,18 @@ class Brain:
 
     def __open_components_manager(self):
         components_manager = ComponentsManager(api=BrainApi(self))
-        for component in self.__get_components():
-            if not isinstance(component, ComponentInfo):
+        for component_info in self.__get_components():
+            if not isinstance(component_info, ComponentInfo):
                 raise Exception("Component registration info should be an instance of ComponentInfo class.")
-            components_manager.register(component.name, component.component)
+            components_manager.register(component_info)
         return components_manager
 
     def __open_serialization_manager(self):
         serialization_manager = SerializationManager(api=BrainApi(self))
-        for component in self.__get_components():
-            if not isinstance(component, ComponentInfo):
+        for component_info in self.__get_components():
+            if not isinstance(component_info, ComponentInfo):
                 raise Exception("Component registration info should be an instance of ComponentInfo class.")
-            serialization_manager.register(component.name, component.serializer)
+            serialization_manager.register(component_info.name, component_info.serializer)
         return serialization_manager
 
 

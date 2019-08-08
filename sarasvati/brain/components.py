@@ -3,6 +3,13 @@ from typing import List, Type
 
 from sarasvati.brain.models import Component
 
+class ComponentInfo:
+    def __init__(self, name, component, serializer, data=None):
+        self.name = name
+        self.component = component
+        self.serializer = serializer
+        self.data = data
+
 
 class ComponentsManager:
     """
@@ -24,7 +31,7 @@ class ComponentsManager:
         """
         return list(map(lambda x: x.component, self.__components.values()))
 
-    def get_component(self, name: str) -> Type[Component]:
+    def get_component_info(self, name: str) -> ComponentInfo:
         """
         Get component class.
         :param name: Name of a component.
@@ -40,24 +47,33 @@ class ComponentsManager:
         :param name: Name of a component.
         :return: Instance of a component.
         """
-        component_class = self.get_component(name)
-        if "api" in signature(component_class.__init__).parameters:
-            return component_class(api=self.__api)
-        return component_class()
+        component_info = self.get_component_info(name)
+        component_class = component_info.component
+        
+        handler_args = list(signature(component_class.__init__).parameters)
+        handler_params = {
+            "api": self.__api,
+            **(component_info.data or {})
+        }
+        filtered_args = {k: v for k, v in handler_params.items() if k in handler_args}
+        
+        return component_class(**filtered_args)
 
-    def register(self, name: str, component: type) -> None:
+    def register(self, component_info: ComponentInfo) -> None:
         """
         Register new component.
         :param name: Name of a component.
         :param component: Class of a component.
         :param serializer: Serializer instance.
         """
-        if not issubclass(component, Component):
-            raise ValueError("The 'component' argument should be subclass of Component class.")
-        if name in self.__components:
-            raise Exception("Component '{}' already registered.".format(name))
+        if not isinstance(component_info, ComponentInfo):
+            raise ValueError("The 'component_info' argument should be an instance of ComponentInfo class.")
+        if not issubclass(component_info.component, Component):
+            raise ValueError("The 'component_info.component' argument should be subclass of Component class.")
+        if component_info.name in self.__components:
+            raise Exception(f"Component '{component_info.name}' already registered.")
 
-        self.__components[name] = component
+        self.__components[component_info.name] = component_info
 
     def unregister(self, name: str) -> None:
         """

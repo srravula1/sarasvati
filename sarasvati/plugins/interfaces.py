@@ -8,6 +8,7 @@ class Plugin(YapsyPlugin):
     def __init__(self):
         super().__init__()
         self._api = None
+        self._config = None
 
     def activate(self):
         super().activate()
@@ -48,13 +49,11 @@ class CommandsPlugin(Plugin):
         pass
 
 
-ComponentInfo = namedtuple("ComponentInfo", ["name", "component", "serializer"])
-
 class ComponentsPlugin(Plugin):
     def __init__(self):
         super().__init__()
 
-    def get_components(self) -> List[ComponentInfo]:
+    def get_components(self):
         pass
 
 

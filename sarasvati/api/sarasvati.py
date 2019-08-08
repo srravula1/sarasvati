@@ -2,6 +2,7 @@ import os
 import platform
 import subprocess
 
+from sarasvati.core.event import Event
 from sarasvati.brain.manager import BrainManager
 from sarasvati.config import ConfigManager
 from sarasvati.packages import PackagesManager
@@ -35,6 +36,9 @@ class Sarasvati:
 
         # Brain manager
         self.brains = BrainManager(api=self)
+
+        # events
+        self.before_start = Event()
 
     def open_path(self, path):
         if platform.system() == "Windows":
