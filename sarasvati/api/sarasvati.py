@@ -2,13 +2,14 @@ import os
 import platform
 import subprocess
 
-from sarasvati.core.event import Event
 from sarasvati.brain.manager import BrainManager
 from sarasvati.config import ConfigManager
+from sarasvati.core.event import Event
 from sarasvati.packages import PackagesManager
-from sarasvati.plugins import (ApplicationPlugin, CommandLinePlugin,
-                               CommandsPlugin, ComponentsPlugin,
-                               PluginsManager, ScreenPlugin, StoragePlugin)
+from sarasvati.plugins import (ApplicationPlugin, CommandHookPlugin,
+                               CommandLinePlugin, CommandsPlugin,
+                               ComponentsPlugin, PluginsManager, ScreenPlugin,
+                               StoragePlugin)
 
 
 class Sarasvati:
@@ -31,7 +32,8 @@ class Sarasvati:
                 "Commands": CommandsPlugin,
                 "Components": ComponentsPlugin,
                 "Storage": StoragePlugin,
-                "Screen": ScreenPlugin
+                "Screen": ScreenPlugin,
+                "CommandHook": CommandHookPlugin
             })
 
         # Brain manager

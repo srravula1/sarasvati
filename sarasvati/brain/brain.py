@@ -64,6 +64,8 @@ class Brain:
         if key:
            thought.identity.key = key
 
+        self.__storage.add(thought)
+
         # set definition in provided
         if title or description:
             thought.definition.title = title
@@ -77,7 +79,7 @@ class Brain:
             link[0].save()
 
         # save and return
-        self.__storage.add(thought)
+        thought.save()
         return thought
 
     def delete_thought(self, thought: Thought):

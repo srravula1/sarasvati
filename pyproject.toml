@@ -15,6 +15,7 @@ tinydb = "^3.13"
 prompt_toolkit = "^2.0"
 pygments = "^2.4"
 pyqt5 = "^5.13"
+hashids = "^1.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"

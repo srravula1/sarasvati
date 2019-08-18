@@ -67,3 +67,8 @@ class StoragePlugin(Plugin):
 
 class ScreenPlugin(Plugin):
     pass
+
+
+class CommandHookPlugin(Plugin):
+    def get_hooks(self):
+        pass

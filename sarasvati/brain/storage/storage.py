@@ -94,6 +94,11 @@ class ThoughtsStorage:
                 self.__serializer.deserialize(thought, record)
                 self.__cache.add(thought, False)
             result.append(thought)
+        
+        # load all linked thoughts
+        for thought in result:
+            for link in thought.links.all:
+                self.get(link.key)
 
         return result
 

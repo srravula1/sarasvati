@@ -1,8 +1,10 @@
 packages:
   path: packages
   repositories:
-  - https://pastebin.com/raw/qqCwanS7
-  - https://pastebin.com/raw/MiX4hmHy
+    - https://pastebin.com/raw/RHwj6jGz
 stores:
   local:
     path: brains
+plugins:
+  folder@components:
+    template: "Files/{year}/{title}"
