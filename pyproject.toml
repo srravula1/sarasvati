@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "sarasvati"
+version = "0.1.1"
+description = ""
+authors = ["Advaita Krishna das <advaita.krishna.das@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+pyyaml = "^5.1"
+requests = "^2.22"
+yapsy = "^1.12"
+ansimarkup = "^1.4"
+munch = "^2.3"
+tinydb = "^3.13"
+prompt_toolkit = "^2.0"
+pygments = "^2.4"
+pyqt5 = "^5.13"
+hashids = "^1.2"
+
+[tool.poetry.dev-dependencies]
+pytest = "^3.0"
+pylint = "^2.3"
+autopep8 = "^1.4"
+rope = "^0.14.0"
+
+[tool.poetry.scripts]
+sarasvati = "sarasvati:main"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

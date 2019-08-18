@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Sarasvati",
+            "type": "python",
+            "request": "launch",
+            "program": "sarasvati/app.py",
+            "console": "integratedTerminal"
+        }
+    ]
+}
