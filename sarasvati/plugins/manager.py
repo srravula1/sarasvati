@@ -17,9 +17,6 @@ class PluginsManager:
         self.__manager.setPluginPlaces(self.__paths)
         self.__manager.setCategoriesFilter(self.__categories)
 
-        # Collect plugins
-        self.__collect_plugins()
-
     @property
     def all(self):
         result = []
@@ -33,7 +30,6 @@ class PluginsManager:
         self.__collect_plugins()
         after = list(self.all)
         diff = set(after) - set(before)
-
         return list(diff)
 
     def find(self, **kwargs):
@@ -54,10 +50,14 @@ class PluginsManager:
 
     def __collect_plugins(self):
         self.__manager.collectPlugins()
+        for plugin in self.__manager.getAllPlugins():
+            if hasattr(plugin.plugin_object, "after_loaded"):
+                plugin.plugin_object.after_loaded(self.__api)
 
-#        for plugin in self.__manager.getAllPlugins():
-#            self.__log.debug("Plugin: %s (v%s) by %s", plugin.name, plugin.version, plugin.author)
-
+            if hasattr(plugin.plugin_object, "load_config"):
+                config = self.__api.config.plugins.get(plugin.name)
+                plugin.plugin_object.load_config(config)
+    
     def __convert(self, obj):
         obj.plugin_object.info = PluginInfo(obj.name, obj.version, obj.path, obj.author, obj.is_activated)
         obj.plugin_object._api = self.__api

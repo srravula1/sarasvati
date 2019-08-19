@@ -1,5 +1,7 @@
 from logging import CRITICAL, DEBUG, basicConfig, getLogger
 
+from colorama import Fore, init
+
 from sarasvati.api import Sarasvati
 from sarasvati.plugins import CommandInfo
 
@@ -9,21 +11,18 @@ getLogger("PyQt5.uic.uiparser").setLevel(CRITICAL)
 getLogger("PyQt5.uic.properties").setLevel(CRITICAL)
 getLogger("yapsy").setLevel(CRITICAL)
 
+LOGO = """
+                                           __   __ 
+.-----.---.-.----.---.-.-----.--.--.---.-.|  |_|__|
+|__ --|  _  |   _|  _  |__ --|  |  |  _  ||   _|  |
+|_____|___._|__| |___._|_____|\___/|___._||____|__|  
+"""
+
 def run():
-    print("Sarasvati")
+    init(autoreset=True)
+    print(Fore.GREEN + LOGO)
+    
     api = Sarasvati()
-
-    # register all the commands
-    command_line = api.plugins.get(category="CommandLine")
-    if command_line:
-        for commands_plugin in api.plugins.find(category="Commands"):
-            commands_plugin.activate()
-            commands = commands_plugin.get_commands()
-            for command in commands:
-                if not isinstance(command, CommandInfo):
-                    raise Exception("Command registration info should be an instance of the CommandInfo class.")
-                command_line.register(command)
-
     app = api.plugins.get(category="Application")
     api.before_start.notify()
     app.activate()

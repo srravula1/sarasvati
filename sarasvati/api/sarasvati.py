@@ -14,6 +14,9 @@ from sarasvati.plugins import (ApplicationPlugin, CommandHookPlugin,
 
 class Sarasvati:
     def __init__(self):
+        # events
+        self.before_start = Event()
+
         # Config manager
         self.config = ConfigManager("config.yml")
         self.config.open()
@@ -35,12 +38,12 @@ class Sarasvati:
                 "Screen": ScreenPlugin,
                 "CommandHook": CommandHookPlugin
             })
+    
+        # Load all the plugins
+        self.plugins.update()
 
         # Brain manager
         self.brains = BrainManager(api=self)
-
-        # events
-        self.before_start = Event()
 
     def open_path(self, path):
         if platform.system() == "Windows":

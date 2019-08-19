@@ -1,4 +1,3 @@
-from collections import namedtuple
 from typing import List
 
 from yapsy.IPlugin import IPlugin as YapsyPlugin
@@ -39,7 +38,12 @@ class CommandLinePlugin(Plugin):
         pass
 
 
-CommandInfo = namedtuple("CommandInfo", ["command", "description", "handler"])
+class CommandInfo:
+    def __init__(self, command, description, handler):
+        self.command = command
+        self.description = description
+        self.handler = handler
+
 
 class CommandsPlugin(Plugin):
     def __init__(self):

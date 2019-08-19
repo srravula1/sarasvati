@@ -8,3 +8,9 @@ stores:
 plugins:
   folder@components:
     template: "Files/{year}/{title}"
+  command-alias:
+    - /a /activate-thought
+    - /cc /create-child
+    - /cp /create-parent
+    - /cr /create-reference
+  
