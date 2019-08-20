@@ -5,6 +5,8 @@ from colorama import Fore, init
 from sarasvati.api import Sarasvati
 from sarasvati.plugins import CommandInfo
 
+from .config_handlers import subscribe_config_changes
+
 basicConfig(level=DEBUG)
 getLogger("urllib3.connectionpool").setLevel(CRITICAL)
 getLogger("PyQt5.uic.uiparser").setLevel(CRITICAL)
@@ -24,6 +26,8 @@ def run():
     
     try:
         api = Sarasvati()
+        subscribe_config_changes(api)
+        
         apps = api.plugins.find(category="Application")
 
         if not apps:

@@ -1,21 +1,29 @@
 from yapsy.FilteredPluginManager import FilteredPluginManager
 from yapsy.PluginManager import PluginManager as YapsyPluginManager
 
+from sarasvati.core.event import Event
 
 class PluginsManager:
     __EXTENSION = "plugin"
     __CORE_PLUGINS_PATH = "packages"
 
     def __init__(self, path: str = "plugins", categories: dict = None, api: object = None):
+        self.__api = api
         self.__paths = [self.__CORE_PLUGINS_PATH, path]
         self.__categories = categories or {}
-        self.__api = api
+        self.__disabled = []
+        self.__plugin_enable_flag_changed = Event()
         
         # Configure plugin manager
         self.__manager = FilteredPluginManager(YapsyPluginManager())
         self.__manager.getPluginLocator().setPluginInfoExtension(self.__EXTENSION)
         self.__manager.setPluginPlaces(self.__paths)
         self.__manager.setCategoriesFilter(self.__categories)
+        self.__manager.isPluginOk = lambda x: x.name not in self.__disabled
+
+    @property
+    def plugin_enable_flag_changed(self):
+        return self.__plugin_enable_flag_changed
 
     @property
     def all(self):
@@ -24,6 +32,15 @@ class PluginsManager:
         for plugin in sorted_plugins:
             result.append(self.__convert(plugin))
         return result
+
+    def disable_plugin(self, name: str):
+        self.__disabled.append(name)
+        self.__plugin_enable_flag_changed.notify(name, False)
+
+    def enable_plugin(self, name: str):
+        if name in self.__disabled:
+            self.__disabled.remove(name)
+            self.__plugin_enable_flag_changed.notify(name, True)
 
     def update(self):
         self.__collect_plugins()

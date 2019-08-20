@@ -38,7 +38,7 @@ class Sarasvati:
                 "Screen": ScreenPlugin,
                 "CommandHook": CommandHookPlugin
             })
-    
+        
         # Load all the plugins
         self.plugins.update()
 

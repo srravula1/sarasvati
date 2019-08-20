@@ -8,3 +8,6 @@ Sarasvati is a personal knowledge database. It starts with a single Thought and 
 # Showcase
 [![asciicast](https://asciinema.org/a/gl26FZKH5xPwUqVqe78NgrP4R.svg)](https://asciinema.org/a/gl26FZKH5xPwUqVqe78NgrP4R)
 [![showcase](http://i.imgur.com/6AwuUIA.png)](https://www.youtube.com/watch?v=U1goORYJ6SA "Sarasvati showcase #1")
+
+## More demos
+1. [Plugins management](https://asciinema.org/a/nEbAYXFmXPGuB7zeIq3s6b9Q2)
