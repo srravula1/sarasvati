@@ -1,7 +1,7 @@
 packages:
   path: packages
   repositories:
-    - https://pastebin.com/raw/RHwj6jGz
+    - https://pastebin.com/raw/QpGfaqPM
 stores:
   local:
     path: brains

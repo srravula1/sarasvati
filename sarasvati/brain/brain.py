@@ -2,8 +2,10 @@ import os
 import platform
 import subprocess
 from itertools import chain
+from typing import List
 
-from sarasvati.brain.components import ComponentInfo, ComponentsManager
+from sarasvati.brain.components import (ComponentInfo, ComponentsManager,
+                                        ComponentsProvider)
 from sarasvati.brain.models import Component, Thought
 from sarasvati.brain.serialization import SerializationManager, Serializer
 from sarasvati.brain.storage import ThoughtCreator, ThoughtsStorage
@@ -121,20 +123,25 @@ class Brain:
         raise Exception(f"Unable to find storage for '{scheme}' protocol")
 
     def __open_components_manager(self):
-        components_manager = ComponentsManager(api=BrainApi(self))
-        for component_info in self.__get_components():
-            if not isinstance(component_info, ComponentInfo):
-                raise Exception("Component registration info should be an instance of ComponentInfo class.")
-            components_manager.register(component_info)
-        return components_manager
+        provider = PluginsComponentsProvider(self.__api.plugins)
+        return ComponentsManager(provider, api=BrainApi(self))
 
     def __open_serialization_manager(self):
-        serialization_manager = SerializationManager(api=BrainApi(self))
-        for component_info in self.__get_components():
-            if not isinstance(component_info, ComponentInfo):
-                raise Exception("Component registration info should be an instance of ComponentInfo class.")
-            serialization_manager.register(component_info.name, component_info.serializer)
-        return serialization_manager
+        provider = PluginsComponentsProvider(self.__api.plugins)
+        return SerializationManager(provider, api=BrainApi(self))
+
+class PluginsComponentsProvider(ComponentsProvider):
+    def __init__(self, plugins_manager):
+        self.__plugins_manager = plugins_manager
+
+    def load_components(self):
+        component_plugins = self.__plugins_manager.find(category="Components")
+        all_components = list(chain.from_iterable(map(
+            lambda x: x.get_components(), 
+            component_plugins
+        )))
+        return {ci.name:ci for ci in all_components}
+        
 
 
 class BrainThoughtCreator(ThoughtCreator):

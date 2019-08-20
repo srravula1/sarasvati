@@ -31,8 +31,10 @@ class PackagesManager:
             self.__repositories)
         candidates = list(filter(None, candidates))  # remove empty results
 
+        if not candidates:
+            raise PackagesException(f"No '{packageId}' package found")
         if len(candidates) > 1:
-            raise PackagesException("Too many candidates to install")
+            raise PackagesException(f"Too many candidates to install for '{packageId}'")
 
         self.__fetcher.fetch(candidates[0])
 

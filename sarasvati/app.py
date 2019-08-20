@@ -22,10 +22,19 @@ def run():
     init(autoreset=True)
     print(Fore.GREEN + LOGO)
     
-    api = Sarasvati()
-    app = api.plugins.get(category="Application")
-    api.before_start.notify()
-    app.activate()
+    try:
+        api = Sarasvati()
+        apps = api.plugins.find(category="Application")
+
+        if not apps:
+            raise Exception("No 'Application' plugin found")
+        if len(apps) > 1:
+            raise Exception("To many 'Application' plugins found")
+
+        api.before_start.notify()
+        apps[0].activate()
+    except Exception as ex:
+        print(Fore.RED + f"Error: {ex}")
 
 if __name__ == "__main__":
     run()

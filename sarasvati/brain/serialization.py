@@ -22,8 +22,8 @@ class ComponentSerializer(metaclass=ABCMeta):
 
 
 class SerializationManager:    
-    def __init__(self, api=None):
-        self.__serializers = {}
+    def __init__(self, provider, api=None):
+        self.__provider = provider
         self.__api = api
 
     def get_serializer(self, name: str) -> ComponentSerializer:
@@ -32,45 +32,24 @@ class SerializationManager:
         :param name: Name of a component.
         :return: Serializer.
         """
-        if name not in self.__serializers:
-            raise Exception("The '{}' component is not registered.".format(name))
-        return self.__serializers[name]
-
-    def register(self, name: str, serializer: ComponentSerializer) -> None:
-        """
-        Register new component.
-        :param name: Name of a component.
-        :param component: Class of a component.
-        :param serializer: Serializer instance.
-        """
-        if not issubclass(serializer, ComponentSerializer):
-            raise ValueError("The 'serializer' argument should be subclass of ComponentSerializer class.")
-        if name in self.__serializers:
-            raise Exception("Serializer '{}' already registered.".format(name))
-
-        # make an instance of a serializer
+        serializers = self.__provider.load_components()
+        if name not in serializers:
+            raise Exception(f"The '{name}' component is not registered.")
+        
+        serializer = serializers[name].serializer
         if "api" in signature(serializer.__init__).parameters:
-            self.__serializers[name] = serializer(self.__api)
+            return serializer(self.__api)
         else:
-            self.__serializers[name] = serializer()
-
-    def unregister(self, name: str) -> None:
-        """
-        Unregister component
-        :param name: Name of a component to unregister.
-        """
-        if name not in self.__serializers:
-            raise Exception("Serializer '{}' is not registered".format(name))
-
-        del self.__serializers[name]
-
+            return serializer()
+        
     def is_registered(self, name: str) -> bool:
         """
         Return true if component with specified name registered.
         :param name: Name of the component.
         :return: True if component registered, otherwise False.
         """
-        return name in self.__serializers
+        serializers = self.__provider.load_components()
+        return name in serializers
 
 
 class Serializer:

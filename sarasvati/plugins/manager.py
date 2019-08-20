@@ -26,12 +26,8 @@ class PluginsManager:
         return result
 
     def update(self):
-        before = list(self.all)
         self.__collect_plugins()
-        after = list(self.all)
-        diff = set(after) - set(before)
-        return list(diff)
-
+        
     def find(self, **kwargs):
         result = []
         for plugin in self.__manager.getPluginsOf(**kwargs):
@@ -57,6 +53,10 @@ class PluginsManager:
             if hasattr(plugin.plugin_object, "load_config"):
                 config = self.__api.config.plugins.get(plugin.name)
                 plugin.plugin_object.load_config(config)
+
+            if hasattr(plugin.plugin_object, "check_dependencies"):
+                config = self.__api.config.plugins.get(plugin.name)
+                plugin.plugin_object.check_dependencies(self.__api)
     
     def __convert(self, obj):
         obj.plugin_object.info = PluginInfo(obj.name, obj.version, obj.path, obj.author, obj.is_activated)
