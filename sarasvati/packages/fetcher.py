@@ -20,5 +20,4 @@ class PackageFetcher:
             zipfile = ZipFile(BytesIO(resp.read()))
             zipfile.extractall(join(self.__fetch_to, package.key))
         except Exception as ex:
-           msg = ex.args[0]
-           raise PackagesException(msg)
+           raise PackagesException(ex)
