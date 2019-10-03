@@ -1,5 +1,4 @@
 from inspect import signature
-from typing import List, Type
 
 from sarasvati.brain.models import Component
 
@@ -10,6 +9,7 @@ class ComponentInfo:
         self.component = component
         self.serializer = serializer
         self.data = data
+
 
 
 class ComponentsProvider:
@@ -47,14 +47,14 @@ class ComponentsManager:
         """
         component_info = self.get_component_info(name)
         component_class = component_info.component
-        
+
         handler_args = list(signature(component_class.__init__).parameters)
         handler_params = {
             "api": self.__api,
             **(component_info.data or {})
         }
         filtered_args = {k: v for k, v in handler_params.items() if k in handler_args}
-        
+
         return component_class(**filtered_args)
 
     def is_registered(self, name: str) -> bool:

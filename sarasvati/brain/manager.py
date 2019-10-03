@@ -5,8 +5,9 @@ class BrainManager:
     """Manager of a brains."""
 
     def __init__(self, api):
-        """Initializes new instance of the BrainManager class.
-        
+        """
+        Initializes new instance of the BrainManager class.
+
         Arguments:
             api {Sarasvati} -- Api
         """
@@ -14,18 +15,28 @@ class BrainManager:
         self.__active = None
 
     def open(self, path: str) -> Brain:
-        """Opens new brain at specified path.
-        
+        """
+        Opens new brain at specified path.
+
         Arguments:
             path {str} -- Path to the brain.
-        
+
         Returns:
             Brain -- Brain.
         """
         self.__active = Brain(self.__api, path)
         return self.__active
 
-    def create(self, path) -> Brain:
+    def create(self, path: str) -> Brain:
+        """
+        Creates a new brain.
+
+        Argumants:
+            path {str} -- Path to staore brain.
+
+        Returns:
+            Brain -- Brain.
+        """
         self.__active = Brain(self.__api, path, create=True)
         return self.__active
 
@@ -33,7 +44,7 @@ class BrainManager:
     def active(self) -> Brain:
         """
         Returns active brain.
-        
+
         Returns:
             Brain -- Brain.
         """

@@ -3,17 +3,21 @@ from yapsy.PluginManager import PluginManager as YapsyPluginManager
 
 from sarasvati.core.event import Event
 
+
 class PluginsManager:
     __EXTENSION = "plugin"
     __CORE_PLUGINS_PATH = "packages"
 
     def __init__(self, path: str = "plugins", categories: dict = None, api: object = None):
+        """
+        Initializes new instance of the PluginsManager class.
+        """
         self.__api = api
         self.__paths = [self.__CORE_PLUGINS_PATH, path]
         self.__categories = categories or {}
         self.__disabled = []
         self.__plugin_enable_flag_changed = Event()
-        
+
         # Configure plugin manager
         self.__manager = FilteredPluginManager(YapsyPluginManager())
         self.__manager.getPluginLocator().setPluginInfoExtension(self.__EXTENSION)
@@ -44,7 +48,7 @@ class PluginsManager:
 
     def update(self):
         self.__collect_plugins()
-        
+
     def find(self, **kwargs):
         result = []
         for plugin in self.__manager.getPluginsOf(**kwargs):

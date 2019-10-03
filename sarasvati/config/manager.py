@@ -15,6 +15,6 @@ class ConfigManager:
     def save(self):
         with open(self.__path, "w") as ymlfile:
             safe_dump(self.__config, ymlfile)
-            
+
     def __getattr__(self, name: str):
         return self.__config[name]

@@ -2,7 +2,6 @@ import os
 import platform
 import subprocess
 from itertools import chain
-from typing import List
 
 from sarasvati.brain.components import (ComponentInfo, ComponentsManager,
                                         ComponentsProvider)
@@ -13,14 +12,24 @@ from sarasvati.core.event import Event
 
 
 class Brain:
+    """Brain is a storage of thoughts.."""
+
     def __init__(self, api, path: str, create: bool = False):
+        """
+        Initializes a new instance of the Brain class.
+
+        Atguments:
+            api {obj} -- User defined object to pass.
+            path {str} -- Path to brain.
+            create {bool} -- Create if doesn't exist.
+        """
         self.__active_thought = None
 
         self.__api = api
         self.__components = self.__open_components_manager()
         self.__serialization = self.__open_serialization_manager()
         self.__storage = ThoughtsStorage(
-            self.__open_storage(path, create), 
+            self.__open_storage(path, create),
             Serializer(self.__serialization, self.__components),
             BrainThoughtCreator(self))
         self.__path = path
@@ -30,6 +39,7 @@ class Brain:
 
     @property
     def name(self):
+        """Returns name of a brain."""
         return self.__name
 
     @property
@@ -97,14 +107,14 @@ class Brain:
     def __get_components(self):
         component_plugins = self.__api.plugins.find(category="Components")
         return list(chain.from_iterable(map(
-            lambda x: x.get_components(), 
+            lambda x: x.get_components(),
             component_plugins
         )))
 
     def __get_storages(self):
         storages_plugins = self.__api.plugins.find(category="Storage")
         return list(chain.from_iterable(map(
-            lambda x: x.get_storages(), 
+            lambda x: x.get_storages(),
             storages_plugins
         )))
 

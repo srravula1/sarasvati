@@ -164,6 +164,6 @@ class Thought(Composite):
             return self.get_component(component_name)
         else:
             return self.__brain.attach_component(self, component_name)
-            
+
     def __repr__(self):
         return "<{}>".format(self.definition.title)

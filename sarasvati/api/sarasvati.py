@@ -13,6 +13,8 @@ from sarasvati.plugins import (ApplicationPlugin, CommandHookPlugin,
 
 
 class Sarasvati:
+    """Sarasvati API."""
+
     def __init__(self):
         # events
         self.before_start = Event()
@@ -38,7 +40,7 @@ class Sarasvati:
                 "Screen": ScreenPlugin,
                 "CommandHook": CommandHookPlugin
             })
-        
+
         # Load all the plugins
         self.plugins.update()
 
@@ -46,6 +48,7 @@ class Sarasvati:
         self.brains = BrainManager(api=self)
 
     def open_path(self, path):
+        """Opens path using OS abilities."""
         if platform.system() == "Windows":
             os.startfile(path)
         elif platform.system() == "Darwin":

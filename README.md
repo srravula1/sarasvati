@@ -15,3 +15,6 @@ Sarasvati is a personal knowledge database. It starts with a single Thought and 
 
 ## More demos
 1. [Plugins management](https://asciinema.org/a/nEbAYXFmXPGuB7zeIq3s6b9Q2)
+
+## Plugins
+1. [Essential Commands](https://github.com/sarasvati-platform/plugin-essential-commands). Provides bunch of essential commands such as package installation.
