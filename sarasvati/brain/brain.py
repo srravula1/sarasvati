@@ -9,6 +9,7 @@ from sarasvati.brain.models import Component, Thought
 from sarasvati.brain.serialization import SerializationManager, Serializer
 from sarasvati.brain.storage import ThoughtCreator, ThoughtsStorage
 from sarasvati.core.event import Event
+from sarasvati.storage import DataStorage, MediaStorage
 
 
 class Brain:
@@ -32,6 +33,7 @@ class Brain:
             self.__open_storage(path, create),
             Serializer(self.__serialization, self.__components),
             BrainThoughtCreator(self))
+        self.__media_storage = self.__open_media_storage(path, create)
         self.__path = path
         self.__name = self.__path.split("/")[-1]
 
@@ -57,6 +59,10 @@ class Brain:
     @property
     def storage(self):
         return self.__storage
+
+    @property
+    def media_storage(self):
+        return self.__media_storage
 
     def create_component(self, name: str) -> Component:
         return self.__components.create_component(name)
@@ -130,11 +136,30 @@ class Brain:
         # find storage based on specified protocol
         for storage in self.__get_storages():
             storage_scheme, storage_class, storage_data = storage
-            if storage_scheme == scheme:
+            if storage_scheme == scheme and issubclass(storage_class, DataStorage):
                 root_path = storage_data.get("root_path", "")
                 return storage_class(root_path + path, create)
 
         raise Exception(f"Unable to find storage for '{scheme}' protocol")
+
+    def __open_media_storage(self, path: str, create: bool = False):
+        tokens = path.split("://")
+        scheme = tokens[0]
+        path = tokens[1]
+
+        # protocol is required to find proper storage
+        if not scheme:
+            raise ValueError("Protocol is not defined")
+
+        # find storage based on specified protocol
+        for storage in self.__get_storages():
+            storage_scheme, storage_class, storage_data = storage
+            if storage_scheme == scheme and issubclass(storage_class, MediaStorage):
+                root_path = storage_data.get("root_path", "")
+                return storage_class(root_path + path, create)
+
+        raise Exception(f"Unable to find storage for '{scheme}' protocol")
+
 
     def __open_components_manager(self):
         provider = PluginsComponentsProvider(self.__api.plugins)
