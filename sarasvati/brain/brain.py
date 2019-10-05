@@ -115,13 +115,6 @@ class Brain:
             component_plugins
         )))
 
-    def __get_storages(self):
-        storages_plugins = self.__api.plugins.find(category="Storage")
-        return list(chain.from_iterable(map(
-            lambda x: x.get_storages(),
-            storages_plugins
-        )))
-
     def __open_components_manager(self):
         provider = PluginsComponentsProvider(self.__api.plugins)
         return ComponentsManager(provider, api=BrainApi(self))
