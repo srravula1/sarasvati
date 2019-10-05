@@ -27,10 +27,10 @@ class Brain:
         self.__components = self.__open_components_manager()
         self.__serialization = self.__open_serialization_manager()
         self.__data_storage = ThoughtsStorage(
-            self.__open_storage(path, create),
+            self.__open_storage(path, DataStorage, create),
             Serializer(self.__serialization, self.__components),
             BrainThoughtCreator(self))
-        self.__media_storage = self.__open_media_storage(path, create)
+        self.__media_storage = self.__open_storage(path, MediaStorage, create)
         self.__path = path
         self.__name = self.__path.split("/")[-1]
 
@@ -121,42 +121,31 @@ class Brain:
             storages_plugins
         )))
 
-    def __open_storage(self, path: str, create: bool = False):
-        tokens = path.split("://")
-        scheme = tokens[0]
-        path = tokens[1]
+    def __open_storage(self, path: str, storage_class: type,  create: bool = False):
+        err = "Unable to open storage."
+        scheme, path = path.split("://")
 
-        # protocol is required to find proper storage
+        # protocol and path are required to find proper storage
         if not scheme:
-            raise ValueError("Protocol is not defined")
+            raise ValueError(f"{err} Protocol is not defined in '{path}'")
+        if not path:
+            raise ValueError(f"{err} Path is not defined in '{path}'")
 
-        # find storage based on specified protocol
-        for storage in self.__get_storages():
-            storage_scheme, storage_class, storage_data = storage
-            if storage_scheme == scheme and issubclass(storage_class, DataStorage):
-                root_path = storage_data.get("root_path", "")
-                return storage_class(root_path + path, create)
+        # find storage based on specified protocol and class
+        storages = list(filter(
+            lambda s: s[0] == scheme and issubclass(s[1], storage_class),
+            self.__get_storages()))
 
-        raise Exception(f"Unable to find storage for '{scheme}' protocol")
+        # there should be one storage for specified protocol
+        if len(storages) > 1:
+            raise Exception(f"{err} Too many storages for '{scheme}' protocol.")
+        elif len(storages) == 0:
+            raise Exception(f"{err} No storage for the '{scheme}' protocol registered.")
 
-    def __open_media_storage(self, path: str, create: bool = False):
-        tokens = path.split("://")
-        scheme = tokens[0]
-        path = tokens[1]
-
-        # protocol is required to find proper storage
-        if not scheme:
-            raise ValueError("Protocol is not defined")
-
-        # find storage based on specified protocol
-        for storage in self.__get_storages():
-            storage_scheme, storage_class, storage_data = storage
-            if storage_scheme == scheme and issubclass(storage_class, MediaStorage):
-                root_path = storage_data.get("root_path", "")
-                return storage_class(root_path + path, create)
-
-        raise Exception(f"Unable to find storage for '{scheme}' protocol")
-
+        # instatiate the storage
+        storage = storages[0]
+        root_path = storage[2].get("root_path", "")
+        return storage[1](root_path + path, create)
 
     def __open_components_manager(self):
         provider = PluginsComponentsProvider(self.__api.plugins)
