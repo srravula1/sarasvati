@@ -1,6 +1,3 @@
-import os
-import platform
-import subprocess
 from itertools import chain
 
 from sarasvati.brain.components import (ComponentInfo, ComponentsManager,
@@ -169,6 +166,7 @@ class Brain:
         provider = PluginsComponentsProvider(self.__api.plugins)
         return SerializationManager(provider, api=BrainApi(self))
 
+
 class PluginsComponentsProvider(ComponentsProvider):
     def __init__(self, plugins_manager):
         self.__plugins_manager = plugins_manager
@@ -176,11 +174,10 @@ class PluginsComponentsProvider(ComponentsProvider):
     def load_components(self):
         component_plugins = self.__plugins_manager.find(category="Components")
         all_components = list(chain.from_iterable(map(
-            lambda x: x.get_components(), 
+            lambda x: x.get_components(),
             component_plugins
         )))
         return {ci.name:ci for ci in all_components}
-        
 
 
 class BrainThoughtCreator(ThoughtCreator):
@@ -210,11 +207,3 @@ class BrainApi:
 
     def is_component_registered(self, name):
         return self.brain.components.is_registered(name)
-
-    def open_path(self, path):
-        if platform.system() == "Windows":
-            os.startfile(path)
-        elif platform.system() == "Darwin":
-            subprocess.Popen(["open", path])
-        else:
-            subprocess.Popen(["xdg-open", path])
