@@ -26,7 +26,7 @@ class Brain:
         self.__api = api
         self.__components = self.__open_components_manager()
         self.__serialization = self.__open_serialization_manager()
-        self.__storage = ThoughtsStorage(
+        self.__data_storage = ThoughtsStorage(
             self.__open_storage(path, create),
             Serializer(self.__serialization, self.__components),
             BrainThoughtCreator(self))
@@ -55,7 +55,7 @@ class Brain:
 
     @property
     def storage(self):
-        return self.__storage
+        return self.__data_storage
 
     @property
     def media_storage(self):
@@ -70,7 +70,7 @@ class Brain:
         return component_instance
 
     def save_thought(self, thought: Thought):
-        self.__storage.update(thought)
+        self.__data_storage.update(thought)
 
     def create_thought(self, title: str, description: str = None, key: str = None, link=None):
         thought = Thought(self)
@@ -79,7 +79,7 @@ class Brain:
         if key:
            thought.identity.key = key
 
-        self.__storage.add(thought)
+        self.__data_storage.add(thought)
 
         # set definition in provided
         if title or description:
@@ -98,10 +98,10 @@ class Brain:
         return thought
 
     def delete_thought(self, thought: Thought):
-        self.__storage.remove(thought)
+        self.__data_storage.remove(thought)
 
     def find_thoughts(self, query: dict):
-        return self.__storage.find(query)
+        return self.__data_storage.find(query)
 
     def activate_thought(self, value):
         self.__active_thought = value
