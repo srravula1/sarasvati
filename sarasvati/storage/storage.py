@@ -49,3 +49,26 @@ class DataStorage(metaclass=ABCMeta):
         :return: List of thoughts data that match the specified query
         """
         pass
+
+
+class MediaStorage(metaclass=ABCMeta):
+    """
+    Abstract media storage.
+    """
+
+    @abstractmethod
+    def create_folder(self, path: str):
+        pass
+
+    @abstractmethod
+    def open(self, path: str):
+        pass
+
+    @abstractmethod
+    def delete_folder(self, path: str):
+        pass
+
+    @abstractmethod
+    def rename_folder(self, path: str, new_path: str):
+        pass
+

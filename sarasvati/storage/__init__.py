@@ -1,1 +1,1 @@
-from .storage import DataStorage
+from .storage import DataStorage, MediaStorage
