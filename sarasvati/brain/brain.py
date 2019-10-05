@@ -123,12 +123,16 @@ class Brain:
         scheme = tokens[0]
         path = tokens[1]
 
+        # protocol is required to find proper storage
         if not scheme:
             raise ValueError("Protocol is not defined")
 
+        # find storage based on specified protocol
         for storage in self.__get_storages():
-            if storage[0] == scheme:
-                return storage[1](path, create)
+            storage_scheme, storage_class, storage_data = storage
+            if storage_scheme == scheme:
+                root_path = storage_data.get("root_path", "")
+                return storage_class(root_path + path, create)
 
         raise Exception(f"Unable to find storage for '{scheme}' protocol")
 
