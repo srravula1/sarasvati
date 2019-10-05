@@ -2,7 +2,7 @@ from abc import ABCMeta, abstractmethod
 from typing import List
 
 
-class Storage(metaclass=ABCMeta):
+class DataStorage(metaclass=ABCMeta):
     """
     Abstract storage.
     """
