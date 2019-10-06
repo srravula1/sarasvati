@@ -2,7 +2,7 @@ from abc import ABCMeta, abstractmethod
 
 from sarasvati.brain.models import Thought
 from sarasvati.brain.serialization import Serializer
-from sarasvati.storage import Storage
+from sarasvati.storage import DataStorage
 
 
 class ThoughtCreator(metaclass=ABCMeta):
@@ -20,12 +20,12 @@ class ThoughtsStorage:
     deserializes and returns a Thought.
     """
 
-    def __init__(self, storage: Storage, serializer: Serializer, creator: ThoughtCreator):
+    def __init__(self, storage: DataStorage, serializer: Serializer, creator: ThoughtCreator):
         """
         Initializes new instance of the ThoughtsStorage class.
 
         Arguments:
-            storage {Storage} -- Raw storage to get data from.
+            storage {DataStorage} -- Raw storage to get data from.
             serializer {Serializer} -- Serializer to parse raw data into Thoughts.
             creator {ThoughtCreator} -- Create dummy thoughts which will be loaded later.
         """
@@ -38,16 +38,16 @@ class ThoughtsStorage:
     def get(self, key: str) -> Thought:
         """
         Returns Thought by specified key.
-        
+
         Arguments:
             key {str} -- Key.
-        
+
         Returns:
             Thought -- Thought.
         """
         is_cached = self.__cache.has(key)
         is_loaded = not self.__cache.is_lazy(key)
-        
+
         # return thought from cache
         if is_cached and is_loaded:
             return self.__cache.get(key)
@@ -94,7 +94,7 @@ class ThoughtsStorage:
                 self.__serializer.deserialize(thought, record)
                 self.__cache.add(thought, False)
             result.append(thought)
-        
+
         # load all linked thoughts
         for thought in result:
             for link in thought.links.all:

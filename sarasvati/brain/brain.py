@@ -1,6 +1,3 @@
-import os
-import platform
-import subprocess
 from itertools import chain
 
 from sarasvati.brain.components import (ComponentInfo, ComponentsManager,
@@ -9,6 +6,8 @@ from sarasvati.brain.models import Component, Thought
 from sarasvati.brain.serialization import SerializationManager, Serializer
 from sarasvati.brain.storage import ThoughtCreator, ThoughtsStorage
 from sarasvati.core.event import Event
+from sarasvati.storage import DataStorage, MediaStorage
+from sarasvati.storage.helpers import open_storage
 
 
 class Brain:
@@ -28,10 +27,11 @@ class Brain:
         self.__api = api
         self.__components = self.__open_components_manager()
         self.__serialization = self.__open_serialization_manager()
-        self.__storage = ThoughtsStorage(
-            self.__open_storage(path, create),
+        self.__data_storage = ThoughtsStorage(
+            open_storage(api, path, DataStorage, create),
             Serializer(self.__serialization, self.__components),
             BrainThoughtCreator(self))
+        self.__media_storage = open_storage(api, path, MediaStorage, create)
         self.__path = path
         self.__name = self.__path.split("/")[-1]
 
@@ -56,7 +56,11 @@ class Brain:
 
     @property
     def storage(self):
-        return self.__storage
+        return self.__data_storage
+
+    @property
+    def media_storage(self):
+        return self.__media_storage
 
     def create_component(self, name: str) -> Component:
         return self.__components.create_component(name)
@@ -67,7 +71,7 @@ class Brain:
         return component_instance
 
     def save_thought(self, thought: Thought):
-        self.__storage.update(thought)
+        self.__data_storage.update(thought)
 
     def create_thought(self, title: str, description: str = None, key: str = None, link=None):
         thought = Thought(self)
@@ -76,7 +80,7 @@ class Brain:
         if key:
            thought.identity.key = key
 
-        self.__storage.add(thought)
+        self.__data_storage.add(thought)
 
         # set definition in provided
         if title or description:
@@ -95,10 +99,10 @@ class Brain:
         return thought
 
     def delete_thought(self, thought: Thought):
-        self.__storage.remove(thought)
+        self.__data_storage.remove(thought)
 
     def find_thoughts(self, query: dict):
-        return self.__storage.find(query)
+        return self.__data_storage.find(query)
 
     def activate_thought(self, value):
         self.__active_thought = value
@@ -111,31 +115,6 @@ class Brain:
             component_plugins
         )))
 
-    def __get_storages(self):
-        storages_plugins = self.__api.plugins.find(category="Storage")
-        return list(chain.from_iterable(map(
-            lambda x: x.get_storages(),
-            storages_plugins
-        )))
-
-    def __open_storage(self, path: str, create: bool = False):
-        tokens = path.split("://")
-        scheme = tokens[0]
-        path = tokens[1]
-
-        # protocol is required to find proper storage
-        if not scheme:
-            raise ValueError("Protocol is not defined")
-
-        # find storage based on specified protocol
-        for storage in self.__get_storages():
-            storage_scheme, storage_class, storage_data = storage
-            if storage_scheme == scheme:
-                root_path = storage_data.get("root_path", "")
-                return storage_class(root_path + path, create)
-
-        raise Exception(f"Unable to find storage for '{scheme}' protocol")
-
     def __open_components_manager(self):
         provider = PluginsComponentsProvider(self.__api.plugins)
         return ComponentsManager(provider, api=BrainApi(self))
@@ -144,6 +123,7 @@ class Brain:
         provider = PluginsComponentsProvider(self.__api.plugins)
         return SerializationManager(provider, api=BrainApi(self))
 
+
 class PluginsComponentsProvider(ComponentsProvider):
     def __init__(self, plugins_manager):
         self.__plugins_manager = plugins_manager
@@ -151,11 +131,10 @@ class PluginsComponentsProvider(ComponentsProvider):
     def load_components(self):
         component_plugins = self.__plugins_manager.find(category="Components")
         all_components = list(chain.from_iterable(map(
-            lambda x: x.get_components(), 
+            lambda x: x.get_components(),
             component_plugins
         )))
         return {ci.name:ci for ci in all_components}
-        
 
 
 class BrainThoughtCreator(ThoughtCreator):
@@ -185,11 +164,3 @@ class BrainApi:
 
     def is_component_registered(self, name):
         return self.brain.components.is_registered(name)
-
-    def open_path(self, path):
-        if platform.system() == "Windows":
-            os.startfile(path)
-        elif platform.system() == "Darwin":
-            subprocess.Popen(["open", path])
-        else:
-            subprocess.Popen(["xdg-open", path])

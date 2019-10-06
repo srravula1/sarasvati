@@ -2,7 +2,7 @@ from abc import ABCMeta, abstractmethod
 from typing import List
 
 
-class Storage(metaclass=ABCMeta):
+class DataStorage(metaclass=ABCMeta):
     """
     Abstract storage.
     """
@@ -49,3 +49,26 @@ class Storage(metaclass=ABCMeta):
         :return: List of thoughts data that match the specified query
         """
         pass
+
+
+class MediaStorage(metaclass=ABCMeta):
+    """
+    Abstract media storage.
+    """
+
+    @abstractmethod
+    def create_folder(self, path: str):
+        pass
+
+    @abstractmethod
+    def open(self, path: str):
+        pass
+
+    @abstractmethod
+    def delete_folder(self, path: str):
+        pass
+
+    @abstractmethod
+    def rename_folder(self, path: str, new_path: str):
+        pass
+
