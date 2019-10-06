@@ -9,8 +9,29 @@ plugins:
   - /cp /create-parent
   - /cr /create-reference
   disabled: []
+
+  # local storage configuration
+  local-storage:
+    # path to save all your data
+    root_path: ~/Brains/
+
+
+  # folders plugin configuration
   folder@components:
-    template: Files/{year}/{title}
-stores:
-  local:
-    path: brains
+    # template to calculate the path where your files will be saved
+    path_template: Files/{category}/{tags}/{title}
+
+    # hierarchy of paths
+    tags_hierarchy:
+      # "Recepie" is a category
+      # - Recipe:
+      #     - Starter:
+      #     - Soup
+      #  - Dessert:
+      #     - Cake
+      #     - Pie
+      # "Idea" is a category
+      # - Idea:
+      #     - Goal of life
+      #     - House
+      #     - Work
