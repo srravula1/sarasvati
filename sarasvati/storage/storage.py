@@ -56,19 +56,42 @@ class MediaStorage(metaclass=ABCMeta):
     Abstract media storage.
     """
 
-    @abstractmethod
-    def create_folder(self, path: str):
-        pass
+    # File management
 
     @abstractmethod
-    def open(self, path: str):
-        pass
+    def is_file_exists(self, path: str) -> bool:
+        """Check existence of a file at specified path."""
+
+    @abstractmethod
+    def read_file(self, path: str) -> str:
+        """Read a whole content of a file at a specified path."""
+
+    @abstractmethod
+    def write_file(self, path: str, content: str) -> str:
+        """Write content to a file at the specified path."""
+
+    @abstractmethod
+    def delete_file(self, path: str):
+        """Delete file at the specified path."""
+
+    # Folders management
+
+    @abstractmethod
+    def is_path_exists(self, path: str) -> bool:
+        """Check existence of a folder at specified path."""
+
+    @abstractmethod
+    def create_folder(self, path: str):
+        """Create folder at the specified path."""
 
     @abstractmethod
     def delete_folder(self, path: str):
-        pass
+        """Delete folder at the specified path."""
 
     @abstractmethod
     def rename_folder(self, path: str, new_path: str):
-        pass
+        """Rename folder."""
 
+    @abstractmethod
+    def open(self, path: str):
+        """Open specific path using systems defaults."""
