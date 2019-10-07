@@ -38,11 +38,11 @@ class SerializationManager:
         :param name: Name of a component.
         :return: Serializer.
         """
-        serializers = self.__provider.load_components()
-        if name not in serializers:
+        comopnents_info = self.__provider.load_components()
+        if name not in comopnents_info:
             raise Exception(f"The '{name}' component is not registered.")
-        
-        serializer = serializers[name].serializer
+
+        serializer = comopnents_info[name].serializer
         if "api" in signature(serializer.__init__).parameters:
             return serializer(self.__api)
         else:
@@ -54,8 +54,8 @@ class SerializationManager:
         :param name: Name of the component.
         :return: True if component registered, otherwise False.
         """
-        serializers = self.__provider.load_components()
-        return name in serializers
+        components_info = self.__provider.load_components()
+        return name in components_info
 
 
 class Serializer:
