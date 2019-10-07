@@ -1,7 +1,7 @@
 from abc import ABCMeta, abstractmethod
 from inspect import signature
 
-from sarasvati.brain.components import ComponentsProvider, ComponentsManager
+from sarasvati.brain.components import ComponentsInfoProvider, ComponentsManager
 
 
 class ComponentSerializer(metaclass=ABCMeta):
@@ -28,7 +28,7 @@ class ComponentSerializer(metaclass=ABCMeta):
 class SerializationManager:
     """Creates serializers on demand using specified provider."""
 
-    def __init__(self, provider: ComponentsProvider, api=None):
+    def __init__(self, provider: ComponentsInfoProvider, api=None):
         self.__provider = provider
         self.__api = api
 

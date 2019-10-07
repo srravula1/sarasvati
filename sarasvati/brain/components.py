@@ -12,7 +12,7 @@ class ComponentInfo:
 
 
 
-class ComponentsProvider:
+class ComponentsInfoProvider:
     def load_components(self):
         pass
 
@@ -21,7 +21,7 @@ class ComponentsManager:
     Components manager.
     """
 
-    def __init__(self, provider: ComponentsProvider, api=None):
+    def __init__(self, provider: ComponentsInfoProvider, api=None):
         """
         Initialize new instance of the ComponentsManager class.
         """

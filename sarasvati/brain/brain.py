@@ -1,7 +1,7 @@
 from itertools import chain
 
 from sarasvati.brain.components import (ComponentInfo, ComponentsManager,
-                                        ComponentsProvider)
+                                        ComponentsInfoProvider)
 from sarasvati.brain.models import Component, Thought
 from sarasvati.brain.serialization import SerializationManager, Serializer
 from sarasvati.brain.storage import ThoughtCreator, ThoughtsStorage
@@ -116,15 +116,15 @@ class Brain:
         )))
 
     def __open_components_manager(self):
-        provider = PluginsComponentsProvider(self.__api.plugins)
+        provider = PluginsComponentsInfoProvider(self.__api.plugins)
         return ComponentsManager(provider, api=BrainApi(self))
 
     def __open_serialization_manager(self):
-        provider = PluginsComponentsProvider(self.__api.plugins)
+        provider = PluginsComponentsInfoProvider(self.__api.plugins)
         return SerializationManager(provider, api=BrainApi(self))
 
 
-class PluginsComponentsProvider(ComponentsProvider):
+class PluginsComponentsInfoProvider(ComponentsInfoProvider):
     def __init__(self, plugins_manager):
         self.__plugins_manager = plugins_manager
 
