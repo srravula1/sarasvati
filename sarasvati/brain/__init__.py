@@ -1,4 +1,3 @@
 from .brain import Brain, BrainApi
-from .models import Thought
-from .components import Component
+from .models import Thought, Component
 from .serialization import ComponentSerializer

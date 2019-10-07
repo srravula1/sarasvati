@@ -1,20 +1,9 @@
 from inspect import signature
 
 from sarasvati.brain.models import Component
+from sarasvati.brain.components.info import ComponentInfo
+from sarasvati.brain.components.provider import ComponentsInfoProvider
 
-
-class ComponentInfo:
-    def __init__(self, name, component, serializer, data=None):
-        self.name = name
-        self.component = component
-        self.serializer = serializer
-        self.data = data
-
-
-
-class ComponentsInfoProvider:
-    def load_components(self):
-        pass
 
 class ComponentsManager:
     """
