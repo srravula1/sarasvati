@@ -46,8 +46,7 @@ class SerializationManager:
         serializer = comopnents_info[name].serializer
         if "api" in signature(serializer.__init__).parameters:
             return serializer(self.__api)
-        else:
-            return serializer()
+        return serializer()
 
     def is_registered(self, name: str) -> bool:
         """
