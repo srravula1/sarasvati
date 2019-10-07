@@ -164,3 +164,7 @@ class BrainApi:
 
     def is_component_registered(self, name):
         return self.brain.components.is_registered(name)
+
+    @property
+    def media(self):
+        return self.brain.media_storage
