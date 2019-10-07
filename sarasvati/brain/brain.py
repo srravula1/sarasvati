@@ -6,35 +6,33 @@ from sarasvati.brain.models import Component, Thought
 from sarasvati.brain.serialization import SerializationManager, Serializer
 from sarasvati.brain.storage import ThoughtCreator, ThoughtsStorage
 from sarasvati.storage import DataStorage, MediaStorage
-from sarasvati.storage.helpers import open_storage
 
 
 class Brain:
     """Brain is a storage of thoughts.."""
 
-    def __init__(self, api, path: str, create: bool = False):
+    def __init__(self, name: str, cip: ComponentsInfoProvider,
+                 data_storage: DataStorage, media_storage: MediaStorage):
         """
         Initializes a new instance of the Brain class.
 
         Atguments:
-            api {obj} -- User defined object to pass.
-            path {str} -- Path to brain.
-            create {bool} -- Create if doesn't exist.
+            name {str} -- Name of a brain.
+            cip {ComponentsInfoProvider} -- ComponentInfo provider.
+            data_storage {DataStorage} -- Data storage.
+            media_storage {MediaStorage} -- Media storage.
         """
-        self.__active_thought = None
-
         brain_api = BrainApi(self)
-        provider = PluginsComponentsInfoProvider(api.plugins)
 
-        self.__api = api
-        self.__components = ComponentsManager(provider, api=brain_api)
-        self.__serialization = SerializationManager(provider, api=brain_api)
+        self.__name = name
+        self.__active_thought = None
+        self.__components = ComponentsManager(cip, api=brain_api)
+        self.__serialization = SerializationManager(cip, api=brain_api)
         self.__data_storage = ThoughtsStorage(
-            open_storage(api, path, DataStorage, create),
+            data_storage,
             Serializer(self.__serialization, self.__components),
             BrainThoughtCreator(self))
-        self.__media_storage = open_storage(api, path, MediaStorage, create)
-        self.__name = path.split("/")[-1]
+        self.__media_storage = media_storage
 
     @property
     def name(self):
