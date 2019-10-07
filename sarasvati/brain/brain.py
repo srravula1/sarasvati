@@ -23,11 +23,12 @@ class Brain:
         """
         self.__active_thought = None
 
+        brain_api = BrainApi(self)
         provider = PluginsComponentsInfoProvider(api.plugins)
 
         self.__api = api
-        self.__components = ComponentsManager(provider, api=BrainApi(self))
-        self.__serialization = SerializationManager(provider, api=BrainApi(self))
+        self.__components = ComponentsManager(provider, api=brain_api)
+        self.__serialization = SerializationManager(provider, api=brain_api)
         self.__data_storage = ThoughtsStorage(
             open_storage(api, path, DataStorage, create),
             Serializer(self.__serialization, self.__components),
