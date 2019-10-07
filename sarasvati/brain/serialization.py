@@ -1,7 +1,12 @@
+"""
+All about serialization of a Brain is stored here.
+"""
+
 from abc import ABCMeta, abstractmethod
 from inspect import signature
 
-from sarasvati.brain.components import ComponentsInfoProvider, ComponentsManager
+from sarasvati.brain.components import (ComponentsInfoProvider,
+                                        ComponentsManager)
 from sarasvati.brain.models import Composite
 
 
@@ -59,6 +64,8 @@ class SerializationManager:
 
 
 class Serializer:
+    """Serializer. Makes objects from raw data and vice versa."""
+
     def __init__(self, sm: SerializationManager, cm: ComponentsManager):
         """Initializes new instance of the Serializer class."""
         self.__sm = sm
