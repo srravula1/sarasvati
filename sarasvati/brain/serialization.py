@@ -1,7 +1,7 @@
 from abc import ABCMeta, abstractmethod
 from inspect import signature
 
-from sarasvati.brain.components import ComponentsProvider
+from sarasvati.brain.components import ComponentsProvider, ComponentsManager
 
 
 class ComponentSerializer(metaclass=ABCMeta):
@@ -59,10 +59,10 @@ class SerializationManager:
 
 
 class Serializer:
-    def __init__(self, serializers, components):
+    def __init__(self, sm: SerializationManager, cm: ComponentsManager):
         """Initializes new instance of the Serializer class."""
-        self.__serializers = serializers
-        self.__components = components
+        self.__sm = sm
+        self.__cm = cm
 
     def serialize(self, model):
         """
@@ -96,7 +96,7 @@ class Serializer:
             if model.has_component(key):
                 component = model.get_component(key)
             else:  # create new component if not exist
-                component = self.__components.create_component(key)
+                component = self.__cm.create_component(key)
                 model.add_component(component)
 
             serializer.deserialize(component_data, component)
@@ -105,7 +105,7 @@ class Serializer:
 
     def __serializer(self, name):
         """Returns serializer by specified name"""
-        serializer = self.__serializers.get_serializer(name)
+        serializer = self.__sm.get_serializer(name)
         if not serializer:
             raise Exception("No serializer found for '{}'".format(name))
         return serializer
