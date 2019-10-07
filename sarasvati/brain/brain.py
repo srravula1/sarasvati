@@ -24,9 +24,11 @@ class Brain:
         """
         self.__active_thought = None
 
+        provider = PluginsComponentsInfoProvider(api.plugins)
+
         self.__api = api
-        self.__components = self.__open_components_manager()
-        self.__serialization = self.__open_serialization_manager()
+        self.__components = ComponentsManager(provider, api=BrainApi(self))
+        self.__serialization = SerializationManager(provider, api=BrainApi(self))
         self.__data_storage = ThoughtsStorage(
             open_storage(api, path, DataStorage, create),
             Serializer(self.__serialization, self.__components),
@@ -115,13 +117,6 @@ class Brain:
             component_plugins
         )))
 
-    def __open_components_manager(self):
-        provider = PluginsComponentsInfoProvider(self.__api.plugins)
-        return ComponentsManager(provider, api=BrainApi(self))
-
-    def __open_serialization_manager(self):
-        provider = PluginsComponentsInfoProvider(self.__api.plugins)
-        return SerializationManager(provider, api=BrainApi(self))
 
 
 class PluginsComponentsInfoProvider(ComponentsInfoProvider):
