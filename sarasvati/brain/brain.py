@@ -5,7 +5,6 @@ from sarasvati.brain.components import (ComponentInfo, ComponentsManager,
 from sarasvati.brain.models import Component, Thought
 from sarasvati.brain.serialization import SerializationManager, Serializer
 from sarasvati.brain.storage import ThoughtCreator, ThoughtsStorage
-from sarasvati.core.event import Event
 from sarasvati.storage import DataStorage, MediaStorage
 from sarasvati.storage.helpers import open_storage
 
@@ -36,8 +35,6 @@ class Brain:
         self.__media_storage = open_storage(api, path, MediaStorage, create)
         self.__path = path
         self.__name = self.__path.split("/")[-1]
-
-        self.thought_activated = Event()
 
     @property
     def name(self):
@@ -108,15 +105,6 @@ class Brain:
 
     def activate_thought(self, value):
         self.__active_thought = value
-        self.thought_activated.notify(self.__active_thought)
-
-    def __get_components(self):
-        component_plugins = self.__api.plugins.find(category="Components")
-        return list(chain.from_iterable(map(
-            lambda x: x.get_components(),
-            component_plugins
-        )))
-
 
 
 class PluginsComponentsInfoProvider(ComponentsInfoProvider):
