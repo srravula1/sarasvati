@@ -35,7 +35,6 @@ def run():
         if len(apps) > 1:
             raise Exception("To many 'Application' plugins found")
 
-        api.before_start.notify()
         apps[0].activate()
     except Exception as ex:
         print(Fore.RED + f"Error: {ex}")
