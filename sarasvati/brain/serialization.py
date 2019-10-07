@@ -65,7 +65,7 @@ class Serializer:
         self.__sm = sm
         self.__cm = cm
 
-    def serialize(self, model):
+    def serialize(self, model: Composite) -> dict:
         """
         Serializes object into dictionary
         :rtype: dict
@@ -81,7 +81,7 @@ class Serializer:
                 result[component.name] = data
         return result
 
-    def deserialize(self, model, data):
+    def deserialize(self, model: Composite, data: dict):
         """
         Deserialize dictionary into model
         :type model: Type[Composite]
