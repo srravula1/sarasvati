@@ -1,3 +1,7 @@
+"""
+Top level API to manage brains.
+"""
+
 from itertools import chain
 
 from sarasvati.brain.brain import Brain
@@ -49,6 +53,8 @@ class BrainManager:
 
 
 class PluginsComponentsInfoProvider(ComponentsInfoProvider):
+    """Provides information about componets taken from plugins."""
+
     def __init__(self, plugins_manager):
         self.__plugins_manager = plugins_manager
 
