@@ -5,13 +5,16 @@ from sarasvati.brain.components import ComponentsProvider
 
 
 class ComponentSerializer(metaclass=ABCMeta):
+    """
+    Serializes and deserializes specified component into/from a dictionary.
+    """
+
     @abstractmethod
     def serialize(self, component: "Component") -> dict:
         """
         Serializes component into dictionary.
         :param component: Component to serialize
         """
-        pass
 
     @abstractmethod
     def deserialize(self, data: dict, component: "Component"):
@@ -20,11 +23,11 @@ class ComponentSerializer(metaclass=ABCMeta):
         :param data: Data to deserialize from.
         :param component: Component to deserialize to.
         """
-        pass
 
 
-class SerializationManager:    
-    def __init__(self, provider, api=None):
+class SerializationManager:
+    """Creates serializers on demand using specified provider."""
+
     def __init__(self, provider: ComponentsProvider, api=None):
         self.__provider = provider
         self.__api = api
@@ -44,10 +47,10 @@ class SerializationManager:
             return serializer(self.__api)
         else:
             return serializer()
-        
+
     def is_registered(self, name: str) -> bool:
         """
-        Return true if component with specified name registered.
+        Return True if component with specified name registered.
         :param name: Name of the component.
         :return: True if component registered, otherwise False.
         """
