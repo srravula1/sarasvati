@@ -1,3 +1,7 @@
+"""
+Define classes if storage to keep data in.
+"""
+
 from abc import ABCMeta, abstractmethod
 from typing import List
 
@@ -14,7 +18,6 @@ class DataStorage(metaclass=ABCMeta):
         :param key: Key.
         :return: Thought
         """
-        pass
 
     @abstractmethod
     def add(self, data: dict) -> None:
@@ -22,7 +25,6 @@ class DataStorage(metaclass=ABCMeta):
         Add thought to the storage.
         :param data: Thought data.
         """
-        pass
 
     @abstractmethod
     def update(self, key: str, data: dict) -> None:
@@ -31,7 +33,6 @@ class DataStorage(metaclass=ABCMeta):
         :param key: Key of record to update.
         :param data: Thought data.
         """
-        pass
 
     @abstractmethod
     def remove(self, key: str) -> None:
@@ -39,7 +40,6 @@ class DataStorage(metaclass=ABCMeta):
         Remove thought from the storage.
         :param key: Key of thought to remove.
         """
-        pass
 
     @abstractmethod
     def find(self, query: dict) -> List[dict]:
@@ -48,7 +48,6 @@ class DataStorage(metaclass=ABCMeta):
         :param query: Query.
         :return: List of thoughts data that match the specified query
         """
-        pass
 
 
 class MediaStorage(metaclass=ABCMeta):
