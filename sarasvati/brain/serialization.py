@@ -2,6 +2,7 @@ from abc import ABCMeta, abstractmethod
 from inspect import signature
 
 from sarasvati.brain.components import ComponentsInfoProvider, ComponentsManager
+from sarasvati.brain.models import Composite
 
 
 class ComponentSerializer(metaclass=ABCMeta):
@@ -32,9 +33,9 @@ class SerializationManager:
         self.__provider = provider
         self.__api = api
 
-    def get_serializer(self, name: str) -> ComponentSerializer:
+    def create_serializer(self, name: str) -> ComponentSerializer:
         """
-        Get serializer for specified component.
+        Create serializer for a specified component.
         :param name: Name of a component.
         :return: Serializer.
         """
@@ -74,7 +75,7 @@ class Serializer:
         """
         result = {}
         for component in model.components:
-            serializer = self.__serializer(component.name)
+            serializer = self.__sm.create_serializer(component.name)
             data = serializer.serialize(component)
             if data:
                 result[component.name] = data
@@ -89,23 +90,14 @@ class Serializer:
         :param data: Data to deserialize from
         :return: Deserialized model
         """
-        for key in data.keys():
-            component_data = data[key]
-            serializer = self.__serializer(key)
+        for component_key, component_data in data.items():
+            serializer = self.__sm.create_serializer(component_key)
 
-            if model.has_component(key):
-                component = model.get_component(key)
+            if model.has_component(component_key):
+                component = model.get_component(component_key)
             else:  # create new component if not exist
-                component = self.__cm.create_component(key)
+                component = self.__cm.create_component(component_key)
                 model.add_component(component)
 
             serializer.deserialize(component_data, component)
-
         return model
-
-    def __serializer(self, name):
-        """Returns serializer by specified name"""
-        serializer = self.__sm.get_serializer(name)
-        if not serializer:
-            raise Exception("No serializer found for '{}'".format(name))
-        return serializer
