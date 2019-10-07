@@ -1,7 +1,7 @@
 from itertools import chain
 
-from sarasvati.brain.components import (ComponentInfo, ComponentsManager,
-                                        ComponentsInfoProvider)
+from sarasvati.brain.components import (ComponentInfo, ComponentsInfoProvider,
+                                        ComponentsManager)
 from sarasvati.brain.models import Component, Thought
 from sarasvati.brain.serialization import SerializationManager, Serializer
 from sarasvati.brain.storage import ThoughtCreator, ThoughtsStorage
@@ -34,8 +34,7 @@ class Brain:
             Serializer(self.__serialization, self.__components),
             BrainThoughtCreator(self))
         self.__media_storage = open_storage(api, path, MediaStorage, create)
-        self.__path = path
-        self.__name = self.__path.split("/")[-1]
+        self.__name = path.split("/")[-1]
 
     @property
     def name(self):
@@ -45,10 +44,6 @@ class Brain:
     @property
     def components(self):
         return self.__components
-
-    @property
-    def path(self):
-        return self.__path.split("://")[1]
 
     @property
     def active_thought(self):
