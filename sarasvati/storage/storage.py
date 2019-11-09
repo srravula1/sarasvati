@@ -3,7 +3,11 @@ Define classes if storage to keep data in.
 """
 
 from abc import ABCMeta, abstractmethod
+from collections import namedtuple
 from typing import List
+
+
+StorageInfo = namedtuple("StorageInfo", ["scheme", "type", "data"])
 
 
 class DataStorage(metaclass=ABCMeta):
