@@ -63,7 +63,9 @@ class Composite(metaclass=ABCMeta):
             Exception: Raises if component already exist.
         """
         if not isinstance(component, Component):
-            raise TypeError("Component '" + component.name + "' should be subclass of Component")
+            class_name = type(component).__name__
+            raise TypeError(
+                f"Component '{class_name}' should be subclass of Component")
         if self.has_component(component.name):
             raise Exception("Component '" + component.name + "' already exist")
         self.__components[component.name] = component
