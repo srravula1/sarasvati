@@ -7,7 +7,7 @@ from inspect import signature
 
 from sarasvati.brain.components import (ComponentsInfoProvider,
                                         ComponentsManager)
-from sarasvati.brain.models import Composite
+from sarasvati.brain.models import Component, Composite
 
 
 class ComponentSerializer(metaclass=ABCMeta):
@@ -16,14 +16,14 @@ class ComponentSerializer(metaclass=ABCMeta):
     """
 
     @abstractmethod
-    def serialize(self, component: "Component") -> dict:
+    def serialize(self, component: Component) -> dict:
         """
         Serializes component into dictionary.
         :param component: Component to serialize
         """
 
     @abstractmethod
-    def deserialize(self, data: dict, component: "Component"):
+    def deserialize(self, data: dict, component: Component):
         """
         Deserialize component from dictionary
         :param data: Data to deserialize from.
