@@ -47,7 +47,7 @@ class PluginsManager:
             self.__plugin_enable_flag_changed.notify(name, True)
 
     def update(self):
-        self.__collect_plugins()
+        self.__manager.collectPlugins()
 
     def find(self, **kwargs):
         result = []
@@ -65,20 +65,6 @@ class PluginsManager:
         elif count > 1:
             raise Exception("More than one plugin found")
 
-    def __collect_plugins(self):
-        self.__manager.collectPlugins()
-        for plugin in self.__manager.getAllPlugins():
-            if hasattr(plugin.plugin_object, "after_loaded"):
-                plugin.plugin_object.after_loaded(self.__api)
-
-            if hasattr(plugin.plugin_object, "load_config"):
-                config = self.__api.config.plugins.get(plugin.name)
-                plugin.plugin_object.load_config(config)
-
-            if hasattr(plugin.plugin_object, "check_dependencies"):
-                config = self.__api.config.plugins.get(plugin.name)
-                plugin.plugin_object.check_dependencies(self.__api)
-    
     def __convert(self, obj):
         obj.plugin_object.info = PluginInfo(
             obj.name, obj.version, obj.path, obj.author, obj.is_activated)
