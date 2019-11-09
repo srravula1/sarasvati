@@ -26,26 +26,35 @@ class PackagesManager:
             repository.update()
 
     def add(self, packageId: PackageId):
+        # find packages in every repository
         candidates = map(
             lambda r: r.find_package(packageId),
             self.__repositories)
-        candidates = list(filter(None, candidates))  # remove empty results
 
+        # remove empty results
+        # (it returns None if nothing found in repository)
+        candidates = [c for c in candidates if c is not None]
+
+        # check for errors:
+        # - unable to install package with same ID from different repositories
+        # - unable to install pakckage if nothing found
         if not candidates:
             raise PackagesException(f"No '{packageId}' package found")
         if len(candidates) > 1:
-            raise PackagesException(f"Too many candidates to install for '{packageId}'")
+            raise PackagesException(
+                f"Too many candidates to install for '{packageId}'")
 
+        # fetch packages from repository
         self.__fetcher.fetch(candidates[0])
 
     def remove(self, packageId: PackageId):
-        pass
+        raise NotImplementedError()
 
     def find(self, packageId: PackageId):
-        pass
+        raise NotImplementedError()
 
     @staticmethod
     def __create_repos_from_urls(urls: List[str]):
-        return list(map(lambda x: Repository(x, 
-            loader=HttpMetadataLoader, 
-            parser=YamlMetadataParser), urls))
+        return list(map(lambda x: Repository(x,
+                                             loader=HttpMetadataLoader,
+                                             parser=YamlMetadataParser), urls))
