@@ -9,7 +9,7 @@ class Component(metaclass=ABCMeta):
     def __init__(self, name: str):
         """
         Initializes new instance of the Component class.
-        
+
         Arguments:
             name {str} -- Name of a component.
         """
@@ -19,7 +19,7 @@ class Component(metaclass=ABCMeta):
     def name(self) -> str:
         """
         Returns name of a component.
-        
+
         Returns:
             str -- Name of a component.
         """
@@ -31,7 +31,7 @@ class Composite(metaclass=ABCMeta):
     def __init__(self, components: List[Component] = None):
         """
         Initializes new instance of a Composite class.
-        
+
         Keyword Arguments:
             components {List[Component]} -- List of a components to build composite with. (default: {None})
         """
@@ -42,10 +42,10 @@ class Composite(metaclass=ABCMeta):
     def has_component(self, component_name: str) -> bool:
         """
         Checks if composite has a component.
-        
+
         Arguments:
             component_name {str} -- Name of a component.
-        
+
         Returns:
             bool -- True if composite has a component.
         """
@@ -54,10 +54,10 @@ class Composite(metaclass=ABCMeta):
     def add_component(self, component: Component):
         """
         Add component to the composite.
-        
+
         Arguments:
             component {Component} -- Component.
-        
+
         Raises:
             TypeError: Raises if component not an instance of a Component class.
             Exception: Raises if component already exist.
@@ -75,7 +75,7 @@ class Composite(metaclass=ABCMeta):
     def add_components(self, components: List[Component]):
         """
         Adds list of components to the composite.
-        
+
         Arguments:
             components {List[Component]} -- [description]
         """
@@ -85,13 +85,13 @@ class Composite(metaclass=ABCMeta):
     def get_component(self, name: str) -> Component:
         """
         Returns component using specified name
-        
+
         Arguments:
             name {str} -- Name of a component.
-        
+
         Raises:
             Exception: If no component found.
-        
+
         Returns:
             Component -- Component.
         """
@@ -109,11 +109,11 @@ class Composite(metaclass=ABCMeta):
     def components(self) -> List[Component]:
         """
         Returns list of components.
-        
+
         Returns:
             List[Component] -- List of components
         """
-        return self.__components.values()
+        return list(self.__components.values())
 
     def __getattr__(self, item: str) -> Component:
         return self.get_component(item)
