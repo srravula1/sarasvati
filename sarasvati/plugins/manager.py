@@ -32,7 +32,8 @@ class PluginsManager:
     @property
     def all(self):
         result = []
-        sorted_plugins = sorted(self.__manager.getAllPlugins(), key=lambda x: x.name)
+        all_plugins = self.__manager.getAllPlugins()
+        sorted_plugins = sorted(all_plugins, key=lambda x: x.name)
         for plugin in sorted_plugins:
             result.append(self.__convert(plugin))
         return result
