@@ -1,6 +1,6 @@
 from itertools import chain
 
-from sarasvati.brain.components import (ComponentInfo, ComponentsInfoProvider,
+from sarasvati.brain.components import (ComponentsInfoProvider,
                                         ComponentsManager)
 from sarasvati.brain.models import Component, Thought
 from sarasvati.brain.serialization import SerializationManager, Serializer
@@ -71,7 +71,7 @@ class Brain:
 
         # set key if provided
         if key:
-           thought.identity.key = key
+            thought.identity.key = key
 
         self.__data_storage.add(thought)
 
@@ -82,7 +82,8 @@ class Brain:
 
         # set link if provided
         if link:
-            __opposite = {"child": "parent", "parent": "child", "reference": "reference"}
+            __opposite = {"child": "parent",
+                          "parent": "child", "reference": "reference"}
             thought.links.add(link[0], __opposite[link[1]])
             link[0].links.add(thought, link[1])
             link[0].save()
@@ -111,7 +112,7 @@ class PluginsComponentsInfoProvider(ComponentsInfoProvider):
             lambda x: x.get_components(),
             component_plugins
         )))
-        return {ci.name:ci for ci in all_components}
+        return {ci.name: ci for ci in all_components}
 
 
 class BrainThoughtCreator(ThoughtCreator):

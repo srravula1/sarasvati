@@ -21,8 +21,9 @@ class HttpMetadataLoader(IMetadataLoader):
             response = requests_get(url)
         except:
             raise PackagesException("Unable to load repository metadata")
-        
+
         if not response.ok:
-            raise PackagesException(f"Unable to fetch repository: {response.status_code} {response.reason}")
-        
+            raise PackagesException(
+                f"Unable to fetch repository: {response.status_code} {response.reason}")
+
         return response.text

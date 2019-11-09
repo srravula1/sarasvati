@@ -28,7 +28,7 @@ class Component(metaclass=ABCMeta):
 
 class Composite(metaclass=ABCMeta):
     @abstractmethod
-    def __init__(self, components: List[Component]=None):
+    def __init__(self, components: List[Component] = None):
         """
         Initializes new instance of a Composite class.
         
@@ -67,7 +67,7 @@ class Composite(metaclass=ABCMeta):
             raise TypeError(
                 f"Component '{class_name}' should be subclass of Component")
         if self.has_component(component.name):
-            raise Exception("Component '" + component.name + "' already exist")
+            raise Exception(f"Component '{component.name}' already exist")
         self.__components[component.name] = component
         if hasattr(component, "on_added"):
             component.on_added(self)

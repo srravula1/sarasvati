@@ -8,7 +8,7 @@ class PluginsManager:
     __EXTENSION = "plugin"
     __CORE_PLUGINS_PATH = "packages"
 
-    def __init__(self, path: str = "plugins", categories: dict = None, api: object = None):
+    def __init__(self, path: str = "plugins", categories: dict = None, api: "Sarasvati" = None):
         """
         Initializes new instance of the PluginsManager class.
         """
@@ -80,7 +80,8 @@ class PluginsManager:
                 plugin.plugin_object.check_dependencies(self.__api)
     
     def __convert(self, obj):
-        obj.plugin_object.info = PluginInfo(obj.name, obj.version, obj.path, obj.author, obj.is_activated)
+        obj.plugin_object.info = PluginInfo(
+            obj.name, obj.version, obj.path, obj.author, obj.is_activated)
         obj.plugin_object._api = self.__api
         obj.plugin_object._config = self.__api.config.plugins.get(obj.name)
         return obj.plugin_object

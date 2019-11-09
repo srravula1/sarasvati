@@ -20,6 +20,7 @@ LOGO = """
 |_____|___._|__| |___._|_____|\___/|___._||____|__|
 """
 
+
 def run():
     """Runs Sarasvati application."""
     init(autoreset=True)

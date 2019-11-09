@@ -3,9 +3,10 @@ Top level API to manage brains.
 """
 
 from itertools import chain
+from typing import Dict, Optional
 
 from sarasvati.brain.brain import Brain
-from sarasvati.brain.components import ComponentsInfoProvider
+from sarasvati.brain.components import ComponentInfo, ComponentsInfoProvider
 from sarasvati.storage import DataStorage, MediaStorage
 from sarasvati.storage.helpers import open_storage
 
@@ -38,11 +39,12 @@ class BrainManager:
         media_storage = open_storage(self.__api, path, MediaStorage, create)
         name = path.split("/")[-1]
 
-        self.__active = Brain(name, components_provider, data_storage, media_storage)
+        self.__active = Brain(name, components_provider,
+                              data_storage, media_storage)
         return self.__active
 
     @property
-    def active(self) -> Brain:
+    def active(self) -> Optional[Brain]:
         """
         Returns active brain.
 
@@ -58,10 +60,10 @@ class PluginsComponentsInfoProvider(ComponentsInfoProvider):
     def __init__(self, plugins_manager):
         self.__plugins_manager = plugins_manager
 
-    def load_components(self):
+    def load_components(self) -> Dict[str, ComponentInfo]:
         component_plugins = self.__plugins_manager.find(category="Components")
         all_components = list(chain.from_iterable(map(
             lambda x: x.get_components(),
             component_plugins
         )))
-        return {ci.name:ci for ci in all_components}
+        return {ci.name: ci for ci in all_components}
