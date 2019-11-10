@@ -17,11 +17,12 @@ def get_storages(api) -> List[StorageInfo]:
 
 def open_storage(api, path: str, storage_class: type, create: bool = False):
     err = "Unable to open storage."
-    scheme, path = path.split("://")
 
-    # protocol and path are required to find proper storage
-    if not scheme:
-        raise ValueError(f"{err} Protocol is not defined in '{path}'")
+    # scheme and path are required to find proper storage
+    if "://" not in path:
+        raise ValueError(f"{err} Scheme is not defined in '{path}'")
+
+    scheme, path = path.split("://")
     if not path:
         raise ValueError(f"{err} Path is not defined in '{path}'")
 

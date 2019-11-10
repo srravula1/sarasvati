@@ -34,6 +34,12 @@ class BrainManager:
         Returns:
             Brain -- Brain.
         """
+        # in order to use right storage for the brain we need to pass
+        # storage as part of a path in the following format <storage>://<path>
+        if "://" not in path:
+            raise ValueError(
+                "Path to brain should be in format <storage>://<path>")
+
         components_provider = PluginsComponentsInfoProvider(self.__api.plugins)
         data_storage = open_storage(self.__api, path, DataStorage, create)
         media_storage = open_storage(self.__api, path, MediaStorage, create)
