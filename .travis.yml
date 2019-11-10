@@ -6,13 +6,16 @@ os:
 python:
   - "3.7"
 
+before_install:
+  - pip install poetry
+
 install:
   # install all the project dependencies
   - poetry install
 
   # install all the plugins to be able to run
   # integrational tests
-  - python ./tools.py bootstrap
+  - poetry run python ./tools.py bootstrap
 
 script:
   - PYTHONPATH=. py.test
