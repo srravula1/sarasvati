@@ -23,6 +23,7 @@ pytest = "^3.0"
 pylint = "^2.3"
 autopep8 = "^1.4"
 rope = "^0.14.0"
+click = "^7.0"
 
 [tool.poetry.scripts]
 sarasvati = "sarasvati:main"
