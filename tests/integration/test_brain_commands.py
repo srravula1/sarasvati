@@ -23,12 +23,12 @@ def test_open_brain_without_storage(api: Sarasvati):
 
 
 def test_open_brain_with_local_storage(api: Sarasvati):
-    api.brains.open("local://default")
+    api.brains.open("local://tests/default", create=True)
     assert api.brains.active is not None
 
 
 def test_open_brain_set_name(api: Sarasvati):
-    api.brains.open("local://default")
+    api.brains.open("local://tests/default", create=True)
     assert api.brains.active.name == "default"
 
 
