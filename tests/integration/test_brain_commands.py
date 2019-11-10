@@ -1,7 +1,7 @@
 
 from typing import Any, Callable, List, Union
 
-from pytest import raises
+from pytest import mark, raises
 
 from sarasvati.api.sarasvati import Sarasvati
 from sarasvati.brain.brain import Brain
@@ -70,3 +70,24 @@ def test_create_reference_thought(brain: Brain, execute: Processor):
     reference = execute("/create-thought Reference as:reference").data
     assert reference in root.links.references
     assert root in reference.links.references
+
+
+def test_create_thought_without_title(brain: Brain, execute: Processor):
+    with raises(CommandException) as ex:
+        execute("/create-thought")
+    assert ex.value.args[0] == "No title provided"
+
+
+@mark.parametrize("command", ["/create-parent", "/create-reference", "/create-child"])
+def test_create_thoughts_without_title(command: str, brain: Brain, execute: Processor):
+    execute(["/create-thought Root", "/activate-thought Root"])
+    with raises(CommandException) as ex:
+        execute(command)
+    assert ex.value.args[0] == "No title provided"
+
+
+@mark.parametrize("command", ["/create-parent", "/create-reference", "/create-child"])
+def test_create_thoughts_requires_active_thought(command: str, brain: Brain, execute: Processor):
+    with raises(CommandException) as ex:
+        execute(command)
+    assert ex.value.args[0] == "No active thought"
